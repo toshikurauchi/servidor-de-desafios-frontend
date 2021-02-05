@@ -60,6 +60,20 @@ export function getPage(session, contentSlug, pageSlug) {
     .catch(() => null);
 }
 
+export function listConcepts(session) {
+  if (!session || !session.token) {
+    return null;
+  }
+  return axios
+    .get(`${BACKEND_URL}/concept/`, {
+      headers: {
+        Authorization: `Token ${session.token}`,
+      },
+    })
+    .then((res) => res.data)
+    .catch(() => []);
+}
+
 export function listCodeChallenges(session, conceptSlug) {
   if (!session || !session.token) {
     return null;
@@ -170,4 +184,18 @@ export function getTraceStateList(session, slug) {
     })
     .then((res) => res.data)
     .catch(() => null);
+}
+
+export function getInteractions(session, type) {
+  if (!session || !session.token) {
+    return [];
+  }
+  return axios
+    .get(`${BACKEND_URL}/${type}/interaction/`, {
+      headers: {
+        Authorization: `Token ${session.token}`,
+      },
+    })
+    .then((res) => res.data)
+    .catch(() => []);
 }

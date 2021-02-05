@@ -7,7 +7,9 @@ import {
   getPage,
   listCodeChallenges,
   listTraceChallenges,
+  getInteractions,
 } from "../../src/client";
+import { groupBySlug } from "../../src/models/interaction";
 import ContentChallenges from "../../src/components/ContentChallenges";
 
 function ContentPage(props) {
@@ -26,7 +28,9 @@ export async function getServerSideProps(context) {
   let props = {};
 
   if (!session) {
-    context.res.writeHead(302, { Location: "/login" });
+    context.res.writeHead(302, {
+      Location: `/login?callbackUrl=/conteudo/${contentSlug}/${pageSlug || ""}`,
+    });
     context.res.end();
   }
 
@@ -37,11 +41,29 @@ export async function getServerSideProps(context) {
     const content = contentLists.topics.find((c) => c.slug === contentSlug);
     if (content) {
       const concept = content.concept;
-      const [challenges, traces] = await Promise.all([
+      const [
+        challenges,
+        traces,
+        challengeInteractions,
+        traceInteractions,
+      ] = await Promise.all([
         listCodeChallenges(session, concept),
         listTraceChallenges(session, concept),
+        getInteractions(session, "code"),
+        getInteractions(session, "trace"),
       ]);
-      props = { ...props, content, challenges, traces };
+
+      const challengeInteractionsBySlug = groupBySlug(challengeInteractions);
+      const traceInteractionsBySlug = groupBySlug(traceInteractions);
+
+      props = {
+        ...props,
+        content,
+        challenges,
+        traces,
+        challengeInteractionsBySlug,
+        traceInteractionsBySlug,
+      };
     } else {
       context.res.writeHead(404);
       context.res.end();

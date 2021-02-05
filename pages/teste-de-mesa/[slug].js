@@ -457,7 +457,9 @@ export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
   if (!session) {
-    context.res.writeHead(302, { Location: "/login" });
+    context.res.writeHead(302, {
+      Location: `/login?callbackUrl=/teste-de-mesa/${slug}`,
+    });
     context.res.end();
   }
 
