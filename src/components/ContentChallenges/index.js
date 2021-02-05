@@ -24,63 +24,73 @@ function ContentChallenges({ content, challenges, traces }) {
         {content.title}
       </Typography>
       {!_.isEmpty(challenges) && (
-        <Typography variant="h4" component="h2" gutterBottom={true}>
-          Exercícios de Programação
-        </Typography>
+        <>
+          <Typography variant="h4" component="h2" gutterBottom={true}>
+            Exercícios de Programação
+          </Typography>
+
+          <TableContainerBase component={Paper}>
+            <Table aria-label="exercícios de programação">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Título</TableCell>
+                  <TableCell>Situação</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {challenges.map((challenge) => (
+                  <TableRow
+                    hover
+                    key={`codechallenge___${challenge.slug}`}
+                    onClick={() =>
+                      router.push(`/programacao/${challenge.slug}`)
+                    }
+                  >
+                    <TableCell component="th" scope="row">
+                      {challenge.title}
+                    </TableCell>
+                    <TableCell>Ok</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainerBase>
+        </>
       )}
-      <TableContainerBase component={Paper}>
-        <Table aria-label="exercícios de programação">
-          <TableHead>
-            <TableRow>
-              <TableCell>Título</TableCell>
-              <TableCell>Situação</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {challenges.map((challenge) => (
-              <TableRow
-                hover
-                key={`codechallenge___${challenge.slug}`}
-                onClick={() => router.push(`/programacao/${challenge.slug}`)}
-              >
-                <TableCell component="th" scope="row">
-                  {challenge.title}
-                </TableCell>
-                <TableCell>Ok</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainerBase>
       {!_.isEmpty(traces) && (
-        <Typography variant="h4" component="h2" gutterBottom={true}>
-          Testes de Mesa
-        </Typography>
+        <>
+          <Typography variant="h4" component="h2" gutterBottom={true}>
+            Testes de Mesa
+          </Typography>
+
+          <TableContainerBase component={Paper}>
+            <Table aria-label="testes de mesa">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Título</TableCell>
+                  <TableCell>Situação</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {traces.map((challenge) => (
+                  <TableRow
+                    hover
+                    key={`tracechallenge___${challenge.slug}`}
+                    onClick={() =>
+                      router.push(`/teste-de-mesa/${challenge.slug}`)
+                    }
+                  >
+                    <TableCell component="th" scope="row">
+                      {challenge.title}
+                    </TableCell>
+                    <TableCell>Ok</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainerBase>
+        </>
       )}
-      <TableContainerBase component={Paper}>
-        <Table aria-label="testes de mesa">
-          <TableHead>
-            <TableRow>
-              <TableCell>Título</TableCell>
-              <TableCell>Situação</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {traces.map((challenge) => (
-              <TableRow
-                hover
-                key={`tracechallenge___${challenge.slug}`}
-                onClick={() => router.push(`/teste-de-mesa/${challenge.slug}`)}
-              >
-                <TableCell component="th" scope="row">
-                  {challenge.title}
-                </TableCell>
-                <TableCell>Ok</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainerBase>
     </>
   );
 }
