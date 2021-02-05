@@ -29,7 +29,7 @@ function ChangePasswordDialog(props) {
         else if (data.code === 3)
           setNewPasswordError("A nova senha deve ser diferente da anterior");
       })
-      .catch(console.log);
+      .catch(console.error);
   };
 
   const handleClose = () => {

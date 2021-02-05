@@ -12,7 +12,7 @@ import theme from "../src/theme";
 
 const GlobalStyle = createGlobalStyle`
 body {
-  background-color: ${theme.colors.BLUE2};
+  background-color: ${theme.colors.BLUE2} !important;
 }
 `;
 

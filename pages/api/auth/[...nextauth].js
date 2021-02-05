@@ -18,7 +18,7 @@ const providers = [
       password: { label: "Senha", type: "password" },
     },
     async authorize({ username, password }) {
-      const baseUrl = process.env.BACKEND_URL;
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       const tokenData = await axios
         .post(baseUrl + "/token/", { username, password })
         .then((res) => res.data)

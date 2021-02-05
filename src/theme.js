@@ -35,6 +35,8 @@ const theme = responsiveFontSizes(
       fontSize: 12,
     },
     colors: colors,
+    drawerWidth: 240,
+    admonitionLeftBorder: 5,
   })
 );
 export default theme;

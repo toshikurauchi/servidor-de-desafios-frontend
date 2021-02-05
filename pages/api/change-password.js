@@ -10,11 +10,15 @@ export default async (req, res) => {
       return;
     }
     const serverRes = await axios
-      .post(process.env.BACKEND_URL + "/change-password/", req.body, {
-        headers: {
-          Authorization: `Token ${session.token}`,
-        },
-      })
+      .post(
+        process.env.NEXT_PUBLIC_BACKEND_URL + "/change-password/",
+        req.body,
+        {
+          headers: {
+            Authorization: `Token ${session.token}`,
+          },
+        }
+      )
       .catch(() => null);
     res.status(serverRes.status).json(serverRes.data);
   }
