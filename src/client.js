@@ -127,3 +127,47 @@ export function getSubmissionCode(session, slug, submissionId) {
     .then((res) => res.data)
     .catch(() => null);
 }
+
+export function postTrace(
+  session,
+  slug,
+  stateIndex,
+  memory,
+  terminal,
+  nextLine,
+  retval
+) {
+  if (!session || !session.token) {
+    return null;
+  }
+  return axios
+    .post(
+      `${BACKEND_URL}/trace/${slug}/`,
+      {
+        state_index: stateIndex,
+        memory,
+        terminal,
+        next_line: nextLine,
+        retval,
+      },
+      {
+        headers: { Authorization: `Token ${session.token}` },
+      }
+    )
+    .then((res) => res.data)
+    .catch(() => null);
+}
+
+export function getTraceStateList(session, slug) {
+  if (!session || !session.token) {
+    return null;
+  }
+  return axios
+    .get(`${BACKEND_URL}/trace/${slug}/state`, {
+      headers: {
+        Authorization: `Token ${session.token}`,
+      },
+    })
+    .then((res) => res.data)
+    .catch(() => null);
+}
