@@ -109,11 +109,7 @@ export function postChallenge(session, slug, code) {
     return null;
   }
   return axios
-    .post(
-      `${BACKEND_URL}/code/${slug}/`,
-      { code },
-      { headers: { Authorization: `Token ${session.token}` } }
-    )
+    .post(`/api/code/${slug}/`, { code })
     .then((res) => res.data)
     .catch(() => null);
 }

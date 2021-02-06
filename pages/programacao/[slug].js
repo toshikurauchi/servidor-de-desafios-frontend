@@ -62,7 +62,7 @@ function CodeChallenge({ challenge, initialSubmissions, slug }) {
     else if (submissions && submissions[0] && !previousCode) {
       loadSubmissionCode(submissions[0].id);
     }
-  }, [submissions]);
+  }, [submissions, session]);
 
   useEffect(() => {
     if (editorRef.current) editorRef.current.setValue(previousCode);
@@ -110,9 +110,11 @@ function CodeChallenge({ challenge, initialSubmissions, slug }) {
   };
 
   const loadSubmissionCode = (submissionId) => {
-    getSubmissionCode(session, slug, submissionId).then((data) => {
-      if (data.code) setPreviousCode(data.code);
-    });
+    if (session) {
+      getSubmissionCode(session, slug, submissionId).then((data) => {
+        if (data.code) setPreviousCode(data.code);
+      });
+    }
   };
 
   const handleCloseSnackbar = (event, reason) => {
