@@ -89,7 +89,7 @@ function CodeChallenge({ challenge, initialSubmissions, slug }) {
     );
     feedbackListRef.current.scrollIntoView();
 
-    postChallenge(session, slug, editorRef.current.getValue())
+    postChallenge(slug, editorRef.current.getValue())
       .then((data) => {
         if (data.success) setPassedTests(true);
         setSubmissions([data].concat(submissions));

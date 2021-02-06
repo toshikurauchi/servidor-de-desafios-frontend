@@ -104,10 +104,7 @@ export function listTraceChallenges(session, conceptSlug) {
     .catch(() => null);
 }
 
-export function postChallenge(session, slug, code) {
-  if (!session || !session.token) {
-    return null;
-  }
+export function postChallenge(slug, code) {
   return axios
     .post(`/api/code/${slug}/`, { code })
     .then((res) => res.data)
@@ -139,7 +136,6 @@ export function getSubmissionCode(session, slug, submissionId) {
 }
 
 export function postTrace(
-  session,
   slug,
   stateIndex,
   memory,
@@ -147,23 +143,14 @@ export function postTrace(
   nextLine,
   retval
 ) {
-  if (!session || !session.token) {
-    return null;
-  }
   return axios
-    .post(
-      `${BACKEND_URL}/trace/${slug}/`,
-      {
-        state_index: stateIndex,
-        memory,
-        terminal,
-        next_line: nextLine,
-        retval,
-      },
-      {
-        headers: { Authorization: `Token ${session.token}` },
-      }
-    )
+    .post(`/api/trace/${slug}/`, {
+      state_index: stateIndex,
+      memory,
+      terminal,
+      next_line: nextLine,
+      retval,
+    })
     .then((res) => res.data)
     .catch(() => null);
 }
@@ -192,6 +179,13 @@ export function getInteractions(session, type) {
         Authorization: `Token ${session.token}`,
       },
     })
+    .then((res) => res.data)
+    .catch(() => []);
+}
+
+export function getThanks() {
+  return axios
+    .get(`${BACKEND_URL}/thanks/`)
     .then((res) => res.data)
     .catch(() => []);
 }

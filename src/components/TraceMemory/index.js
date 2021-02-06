@@ -142,7 +142,7 @@ function MemoryBlock({
       style={{
         flexGrow: 1,
         backgroundColor:
-          readOnly || hasChildren ? theme.colors.DISABLED : "inherit",
+          readOnly || hasChildren ? theme.colors.DISABLED : "white",
       }}
       elevation={3}
     >

@@ -156,9 +156,9 @@ function AppDrawer({ ariaLabel, mobileOpen, onClose, contentLists }) {
             <Divider />
           </React.Fragment>
         ))}
-        {/* <ListItem button component={Link} to={ROUTES.thanks.link()}>
+        <ListItem button component={Link} href="/thanks">
           Agradecimentos
-        </ListItem> */}
+        </ListItem>
         <Divider />
       </List>
     </div>

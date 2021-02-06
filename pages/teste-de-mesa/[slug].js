@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { getSession, useSession } from "next-auth/client";
+import { getSession } from "next-auth/client";
 import { useRouter } from "next/router";
 import _ from "lodash";
 import { vs } from "react-syntax-highlighter/dist/cjs/styles/prism";
@@ -81,6 +81,7 @@ const MobileStepperBase = styled(MobileStepper)`
 `;
 
 function TraceChallenge({ slug, trace, stateList, linesWithCode }) {
+  const terminalRef = useRef(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [passedTests, setPassedTests] = useState(false);
   const [currentStateIndex, setCurrentStateIndex] = useState(
@@ -89,7 +90,6 @@ function TraceChallenge({ slug, trace, stateList, linesWithCode }) {
   const [nextLine, setNextLine] = useState(null);
   const [retval, setRetval] = useState();
   const [currentMemory, setCurrentMemory] = useState({});
-  const [terminalText, setTerminalText] = useState("");
 
   // Error messages
   const [memoryErrorMsg, setMemoryErrorMsg] = useState("");
@@ -100,21 +100,22 @@ function TraceChallenge({ slug, trace, stateList, linesWithCode }) {
   const [terminalErrorMsg, setTerminalErrorMsg] = useState("");
   const [hasEmptyMemory, setHasEmptyMemory] = useState(false);
 
-  const [session, loading] = useSession();
   const router = useRouter();
 
-  const updateNextLine = (curIdx, stateList) => {
+  const { states, totalStates, latestState: latestStateIndex } = stateList;
+
+  const updateNextLine = (curIdx, states) => {
     const nextState =
-      stateList && stateList.length > curIdx + 1 ? stateList[curIdx + 1] : {};
+      states && states.length > curIdx + 1 ? states[curIdx + 1] : {};
     if (typeof nextState.line_i === "number") setNextLine(nextState.line_i + 1);
     else setNextLine(null);
   };
 
-  const { states, totalStates, latestState: latestStateIndex } = stateList;
+  useEffect(() => {
+    setCurrentStateIndex(states.length - 1);
+  }, [states.length]);
 
-  useEffect(() => setCurrentStateIndex(states.length - 1), [states.length]);
-
-  useEffect(() => updateNextLine(currentStateIndex, states), []);
+  useEffect(() => updateNextLine(currentStateIndex, states), [states.length]);
 
   const stateEditable = currentStateIndex === latestStateIndex + 1;
 
@@ -170,12 +171,11 @@ function TraceChallenge({ slug, trace, stateList, linesWithCode }) {
     if (stateEditable) {
       const curRetVal = hasReturn ? retval : null;
       postTrace(
-        session,
         slug,
         currentStateIndex,
         currentMemory,
-        terminalText,
-        nextLine,
+        (terminalRef.current && terminalRef.current.value) || "",
+        currentStateIndex < totalStates - 1 ? nextLine : null,
         curRetVal
       )
         .then((result) => {
@@ -189,7 +189,6 @@ function TraceChallenge({ slug, trace, stateList, linesWithCode }) {
           setNextLineErrorMsg(m(result.next_line_code));
           setRetvalErrorMsg(m(result.retval_code));
           setTerminalErrorMsg(m(result.terminal_code));
-          setTerminalText("");
 
           const passedAll =
             result.memory_code.code === 0 &&
@@ -202,7 +201,7 @@ function TraceChallenge({ slug, trace, stateList, linesWithCode }) {
           setPassedTests(passedAll);
           setSnackbarOpen(true);
         })
-        .catch(console.log);
+        .catch(console.error);
     } else {
       const newIdx = Math.min(totalStates, currentStateIndex + 1);
       setCurrentStateIndex(newIdx);
@@ -377,8 +376,8 @@ function TraceChallenge({ slug, trace, stateList, linesWithCode }) {
                   )}
                   <Terminal
                     lines={stdout}
-                    onChange={setTerminalText}
                     style={{ flexGrow: 1 }}
+                    ref={terminalRef}
                     getOutput={(line) => line.out}
                     getInput={(line) => line.in}
                     editable={stateEditable}

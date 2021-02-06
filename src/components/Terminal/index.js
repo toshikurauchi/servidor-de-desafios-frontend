@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import Box from "@material-ui/core/Box";
@@ -28,44 +28,49 @@ const TerminalBase = styled(Box)`
 `;
 
 const SourceCode = styled(Typography)`
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace !important;
-  letter-spacing: 0.01em;
+  && {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace !important;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+  }
 `;
 
 const TerminalInput = styled(SourceCode)`
   color: ${(props) => props.theme.colors.TERMINAL_INPUT};
 `;
 
-function Terminal({
-  keyPrefix,
-  getInput,
-  getOutput,
-  lines,
-  onChange,
-  editable,
-  ...props
-}) {
-  const handleChange = (event) => {
-    onChange && onChange(event.target.value);
-  };
+const Terminal = forwardRef(
+  (
+    { keyPrefix, getInput, getOutput, lines, onChange, editable, ...props },
+    ref
+  ) => {
+    const handleChange = (event) => {
+      onChange && onChange(event.target.value);
+    };
 
-  return (
-    <TerminalBase {...props}>
-      {lines.map((line, idx) => (
-        <Box key={`${keyPrefix}${idx}`}>
-          <SourceCode component="code">{getOutput(line)}</SourceCode>
-          <TerminalInput component="code">{getInput(line)}</TerminalInput>
-        </Box>
-      ))}
-      {editable && (
-        <Box>
-          <TerminalTextArea rows="3" onChange={handleChange}></TerminalTextArea>
-        </Box>
-      )}
-    </TerminalBase>
-  );
-}
+    return (
+      <TerminalBase {...props}>
+        {lines.map((line, idx) => (
+          <Box key={`${keyPrefix}${idx}`}>
+            <SourceCode component="code">{getOutput(line)}</SourceCode>
+            <TerminalInput component="code">{getInput(line)}</TerminalInput>
+          </Box>
+        ))}
+        {editable && (
+          <Box>
+            <TerminalTextArea
+              ref={ref}
+              rows="3"
+              onChange={handleChange}
+            ></TerminalTextArea>
+          </Box>
+        )}
+      </TerminalBase>
+    );
+  }
+);
 
 Terminal.propTypes = {
   lines: PropTypes.arrayOf(PropTypes.object).isRequired,
