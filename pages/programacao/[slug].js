@@ -283,6 +283,7 @@ export async function getServerSideProps(context) {
       Location: `/login?callbackUrl=/programacao/${slug}`,
     });
     context.res.end();
+    return;
   }
 
   const [challenge, initialSubmissions, contentLists] = await Promise.all([
