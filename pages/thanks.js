@@ -65,7 +65,7 @@ export async function getServerSideProps(context) {
   if (!session) {
     context.res.writeHead(302, { Location: "/login?callbackUrl=/" });
     context.res.end();
-    return;
+    return { props: {} };
   }
 
   const [contentLists, authors] = await Promise.all([

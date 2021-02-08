@@ -460,7 +460,7 @@ export async function getServerSideProps(context) {
       Location: `/login?callbackUrl=/teste-de-mesa/${slug}`,
     });
     context.res.end();
-    return;
+    return { props: {} };
   }
 
   const [trace, stateList, contentLists] = await Promise.all([

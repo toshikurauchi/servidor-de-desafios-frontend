@@ -32,7 +32,7 @@ export async function getServerSideProps(context) {
       Location: `/login?callbackUrl=/conteudo/${contentSlug}/${pageSlug || ""}`,
     });
     context.res.end();
-    return;
+    return { props: {} };
   }
 
   const contentLists = await getContentLists(session);
@@ -68,7 +68,7 @@ export async function getServerSideProps(context) {
     } else {
       context.res.writeHead(404);
       context.res.end();
-      return;
+      return { props };
     }
   } else {
     props["mdContent"] = await getPage(session, contentSlug, pageSlug);
