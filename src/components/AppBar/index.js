@@ -46,7 +46,7 @@ export default function PyGymAppBar({ contentLists }) {
     setMobileOpen(!mobileOpen);
   };
 
-  if (router.pathname.startsWith("/login")) return null;
+  if (router.pathname.startsWith("/auth")) return null;
 
   return (
     <>

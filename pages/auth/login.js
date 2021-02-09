@@ -8,7 +8,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import theme from "../src/theme";
+import theme from "../../src/theme";
+import Link from "../../src/components/Link";
 
 const GlobalStyle = createGlobalStyle`
 body {
@@ -102,11 +103,7 @@ export default function Login({ csrfToken }) {
               required={true}
               name="password"
               autoComplete="current-password"
-              helperText={
-                passwordError
-                  ? passwordError
-                  : "Caso você não tenha mudado, sua senha é igual ao nome de usuário"
-              }
+              helperText={passwordError}
               error={Boolean(passwordError)}
               fullWidth
             />
@@ -125,6 +122,10 @@ export default function Login({ csrfToken }) {
                 Usuário ou senha incorretos
               </FormHelperText>
             )}
+            <Typography>
+              Ainda não possui cadastro?{" "}
+              <Link href="/auth/signup">Clique aqui para se cadastrar</Link>.
+            </Typography>
           </CenteredContent>
         </CenteredContent>
       </LoginBackBase>

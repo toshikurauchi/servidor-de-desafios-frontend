@@ -11,7 +11,7 @@ export default async (req, res) => {
     }
     const serverRes = await axios
       .post(
-        process.env.NEXT_PUBLIC_BACKEND_URL + "/change-password/",
+        process.env.NEXT_PUBLIC_BACKEND_URL + "/auth/change-password/",
         req.body,
         {
           headers: {

@@ -20,7 +20,7 @@ const providers = [
     async authorize({ username, password }) {
       const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       const tokenData = await axios
-        .post(baseUrl + "/token/", { username, password })
+        .post(baseUrl + "/auth/token/", { username, password })
         .then((res) => res.data)
         .catch(() => null);
       if (!tokenData || !tokenData.token) return null;
@@ -59,7 +59,7 @@ const options = {
   providers,
   callbacks,
   pages: {
-    signIn: "/login",
+    signIn: "/auth/login",
   },
 };
 

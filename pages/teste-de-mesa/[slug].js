@@ -457,7 +457,7 @@ export async function getServerSideProps(context) {
 
   if (!session) {
     context.res.writeHead(302, {
-      Location: `/login?callbackUrl=/teste-de-mesa/${slug}`,
+      Location: `/auth/login?callbackUrl=/teste-de-mesa/${slug}`,
     });
     context.res.end();
     return { props: {} };

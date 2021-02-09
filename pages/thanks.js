@@ -63,7 +63,7 @@ export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 
   if (!session) {
-    context.res.writeHead(302, { Location: "/login?callbackUrl=/" });
+    context.res.writeHead(302, { Location: "/auth/login?callbackUrl=/" });
     context.res.end();
     return { props: {} };
   }

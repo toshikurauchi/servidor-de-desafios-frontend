@@ -280,7 +280,7 @@ export async function getServerSideProps(context) {
 
   if (!session) {
     context.res.writeHead(302, {
-      Location: `/login?callbackUrl=/programacao/${slug}`,
+      Location: `/auth/login?callbackUrl=/programacao/${slug}`,
     });
     context.res.end();
     return { props: {} };

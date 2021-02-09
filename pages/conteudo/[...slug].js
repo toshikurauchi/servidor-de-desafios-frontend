@@ -29,7 +29,9 @@ export async function getServerSideProps(context) {
 
   if (!session) {
     context.res.writeHead(302, {
-      Location: `/login?callbackUrl=/conteudo/${contentSlug}/${pageSlug || ""}`,
+      Location: `/auth/login?callbackUrl=/conteudo/${contentSlug}/${
+        pageSlug || ""
+      }`,
     });
     context.res.end();
     return { props: {} };
