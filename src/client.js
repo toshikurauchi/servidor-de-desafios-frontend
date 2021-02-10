@@ -189,3 +189,35 @@ export function getThanks() {
     .then((res) => res.data)
     .catch(() => []);
 }
+
+export function loadQuiz(session, slug) {
+  if (!session || !session.token) {
+    return null;
+  }
+  return axios
+    .get(`${BACKEND_URL}/quiz/${slug}/`, {
+      headers: {
+        Authorization: `Token ${session.token}`,
+      },
+    })
+    .then((res) => {
+      const quiz = res.data;
+      if (quiz.duration <= 0 || quiz.submitted) return null;
+      return quiz;
+    })
+    .catch(() => null);
+}
+
+export function getRemainingQuizTime(session, slug) {
+  if (!session || !session.token) {
+    return 0;
+  }
+  return axios
+    .get(`${BACKEND_URL}/quiz/${slug}/remaining-time/`, {
+      headers: {
+        Authorization: `Token ${session.token}`,
+      },
+    })
+    .then((res) => res.data)
+    .catch(() => 0);
+}

@@ -8,7 +8,9 @@ import {
   listCodeChallenges,
   listTraceChallenges,
   getInteractions,
+  loadQuiz,
 } from "../../src/client";
+import { saveQuizSlug, loadQuizSlug } from "../../src/cookies";
 import { groupBySlug } from "../../src/models/interaction";
 import ContentChallenges from "../../src/components/ContentChallenges";
 
@@ -22,18 +24,18 @@ function ContentPage(props) {
 
 export default ContentPage;
 
-export async function getServerSideProps(context) {
-  const [contentSlug, pageSlug] = context.query.slug;
-  const session = await getSession({ req: context.req });
+export async function getServerSideProps({ req, res, query }) {
+  const [contentSlug, pageSlug] = query.slug;
+  const session = await getSession({ req });
   let props = {};
 
   if (!session) {
-    context.res.writeHead(302, {
+    res.writeHead(302, {
       Location: `/auth/login?callbackUrl=/conteudo/${contentSlug}/${
         pageSlug || ""
       }`,
     });
-    context.res.end();
+    res.end();
     return { props: {} };
   }
 
@@ -68,13 +70,23 @@ export async function getServerSideProps(context) {
         traceInteractionsBySlug,
       };
     } else {
-      context.res.writeHead(404);
-      context.res.end();
+      res.writeHead(404);
+      res.end();
       return { props };
     }
   } else {
     props["mdContent"] = await getPage(session, contentSlug, pageSlug);
   }
+
+  let currentQuiz = null;
+  const quizSlug = loadQuizSlug(req, res);
+  if (quizSlug) {
+    currentQuiz = await loadQuiz(session, quizSlug);
+    if (currentQuiz) currentQuiz.slug = quizSlug;
+  } else {
+    saveQuizSlug(null, req, res);
+  }
+  props["currentQuiz"] = currentQuiz;
 
   return {
     props,

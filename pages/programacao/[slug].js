@@ -24,13 +24,17 @@ import {
   postChallenge,
   getSubmissionList,
   getSubmissionCode,
+  loadQuiz,
 } from "../../src/client";
+import { saveQuizSlug, loadQuizSlug } from "../../src/cookies";
 
 function saveCode(challenge, code) {
+  if (!challenge) return;
   localStorage.setItem(`code.${challenge.slug}`, code);
 }
 
 function loadCode(challenge) {
+  if (!challenge) return null;
   return localStorage.getItem(`code.${challenge.slug}`);
 }
 
@@ -147,9 +151,9 @@ function CodeChallenge({ challenge, initialSubmissions, slug }) {
     );
   if (!challenge)
     return (
-      <LoadingContainer>
-        <CircularProgress color="secondary" size="10vw" />
-      </LoadingContainer>
+      <Typography>
+        Este exercício não existe ou você não tem acesso a ele.
+      </Typography>
     );
 
   return (
@@ -274,15 +278,15 @@ function CodeChallenge({ challenge, initialSubmissions, slug }) {
 
 export default CodeChallenge;
 
-export async function getServerSideProps(context) {
-  const slug = context.query.slug;
-  const session = await getSession({ req: context.req });
+export async function getServerSideProps({ req, res, query }) {
+  const slug = query.slug;
+  const session = await getSession({ req });
 
   if (!session) {
-    context.res.writeHead(302, {
+    res.writeHead(302, {
       Location: `/auth/login?callbackUrl=/programacao/${slug}`,
     });
-    context.res.end();
+    res.end();
     return { props: {} };
   }
 
@@ -292,12 +296,22 @@ export async function getServerSideProps(context) {
     getContentLists(session),
   ]);
 
+  let currentQuiz = null;
+  const quizSlug = loadQuizSlug(req, res);
+  if (quizSlug) {
+    currentQuiz = await loadQuiz(session, quizSlug);
+    if (currentQuiz) currentQuiz.slug = quizSlug;
+  } else {
+    saveQuizSlug(null, req, res);
+  }
+
   return {
     props: {
       slug,
       challenge,
       initialSubmissions,
       contentLists,
+      currentQuiz,
     },
   };
 }

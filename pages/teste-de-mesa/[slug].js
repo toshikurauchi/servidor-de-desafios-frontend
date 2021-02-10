@@ -26,7 +26,9 @@ import {
   postTrace,
   getTraceStateList,
   getContentLists,
+  loadQuiz,
 } from "../../src/client";
+import { saveQuizSlug, loadQuizSlug } from "../../src/cookies";
 
 const LoadingContainer = styled.div`
   margin: 8em;
@@ -451,15 +453,15 @@ function TraceChallenge({ slug, trace, stateList, linesWithCode }) {
 
 export default TraceChallenge;
 
-export async function getServerSideProps(context) {
-  const slug = context.query.slug;
-  const session = await getSession({ req: context.req });
+export async function getServerSideProps({ req, res, query }) {
+  const slug = query.slug;
+  const session = await getSession({ req });
 
   if (!session) {
-    context.res.writeHead(302, {
+    res.writeHead(302, {
       Location: `/auth/login?callbackUrl=/teste-de-mesa/${slug}`,
     });
-    context.res.end();
+    res.end();
     return { props: {} };
   }
 
@@ -471,6 +473,15 @@ export async function getServerSideProps(context) {
 
   const linesWithCode = findLinesWithCode(trace.code);
 
+  let currentQuiz = null;
+  const quizSlug = loadQuizSlug(req, res);
+  if (quizSlug) {
+    currentQuiz = await loadQuiz(session, quizSlug);
+    if (currentQuiz) currentQuiz.slug = quizSlug;
+  } else {
+    saveQuizSlug(null, req, res);
+  }
+
   return {
     props: {
       slug,
@@ -478,6 +489,7 @@ export async function getServerSideProps(context) {
       stateList,
       linesWithCode,
       contentLists,
+      currentQuiz,
     },
   };
 }

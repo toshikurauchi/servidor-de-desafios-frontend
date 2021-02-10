@@ -38,7 +38,7 @@ const AppLogo = styled.img`
   margin: ${(props) => props.theme.spacing(1)};
 `;
 
-export default function PyGymAppBar({ contentLists }) {
+export default function PyGymAppBar({ contentLists, currentQuiz }) {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -59,7 +59,7 @@ export default function PyGymAppBar({ contentLists }) {
             color="inherit"
             aria-label="abrir"
             edge="start"
-            // onClick={handleDrawerToggle}
+            onClick={handleDrawerToggle}
           >
             <MenuIcon />
           </MenuButton>
@@ -76,6 +76,7 @@ export default function PyGymAppBar({ contentLists }) {
         mobileOpen={mobileOpen}
         onClose={handleDrawerToggle}
         contentLists={contentLists}
+        currentQuiz={currentQuiz}
       />
     </>
   );

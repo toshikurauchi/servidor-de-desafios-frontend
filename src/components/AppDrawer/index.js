@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/client";
+import { useRouter } from "next/router";
 import styled from "styled-components";
+import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
@@ -10,7 +13,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import _ from "lodash";
+import Countdown from "react-countdown";
 import Link from "../Link";
+import { getRemainingQuizTime } from "../../client";
 
 const NestedListItem = styled(ListItem)`
   && {
@@ -131,7 +136,30 @@ function ContentList(props) {
   );
 }
 
-function AppDrawer({ ariaLabel, mobileOpen, onClose, contentLists }) {
+function AppDrawer({
+  ariaLabel,
+  mobileOpen,
+  onClose,
+  contentLists,
+  currentQuiz,
+}) {
+  const router = useRouter();
+  const [session, loading] = useSession();
+  const remainingTestTime = currentQuiz ? currentQuiz.remaining_seconds : 0;
+  const [testTime, setTestTime] = useState(remainingTestTime);
+  const [count, setCount] = useState(1);
+
+  useEffect(() => {
+    if (!currentQuiz || !session) return;
+
+    getRemainingQuizTime(session, currentQuiz.slug).then((t) => {
+      if (Math.abs(t - testTime) > 60) setTestTime(t);
+      setTimeout(() => {
+        setCount(count + 1);
+      }, 5 * 60 * 1000);
+    });
+  }, [currentQuiz, session, count]);
+
   if (!contentLists) return null;
 
   const topics = contentLists.topics;
@@ -142,6 +170,27 @@ function AppDrawer({ ariaLabel, mobileOpen, onClose, contentLists }) {
       <Toolbar />
       <Divider />
       <List>
+        <ListItem button>
+          <Button
+            variant="contained"
+            color="secondary"
+            component={Link}
+            href="/avaliacao"
+            style={{ flexGrow: 1 }}
+          >
+            {testTime > 0 ? (
+              <Countdown
+                date={Date.now() + testTime * 1000}
+                daysInHours={true}
+                onComplete={() => {
+                  setTimeout(() => router.reload(), 60000);
+                }}
+              />
+            ) : (
+              "Avaliações"
+            )}
+          </Button>
+        </ListItem>
         <ContentList
           title="Aulas"
           list={topics}

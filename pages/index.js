@@ -9,7 +9,9 @@ import {
   listCodeChallenges,
   listTraceChallenges,
   listConcepts,
+  loadQuiz,
 } from "../src/client";
+import { saveQuizSlug, loadQuizSlug } from "../src/cookies";
 import { groupBySlug } from "../src/models/interaction";
 import ContentSummary from "../src/components/ContentSummary";
 
@@ -54,12 +56,12 @@ export default function Home({
   );
 }
 
-export async function getServerSideProps(context) {
-  const session = await getSession({ req: context.req });
+export async function getServerSideProps({ req, res }) {
+  const session = await getSession({ req });
 
   if (!session) {
-    context.res.writeHead(302, { Location: "/auth/login?callbackUrl=/" });
-    context.res.end();
+    res.writeHead(302, { Location: "/auth/login?callbackUrl=/" });
+    res.end();
     return { props: {} };
   }
 
@@ -97,6 +99,15 @@ export async function getServerSideProps(context) {
   codeChallenges.forEach(addTo(codeChallengesByConcept));
   traceChallenges.forEach(addTo(traceChallengesByConcept));
 
+  let currentQuiz = null;
+  const quizSlug = loadQuizSlug(req, res);
+  if (quizSlug) {
+    currentQuiz = await loadQuiz(session, quizSlug);
+    if (currentQuiz) currentQuiz.slug = quizSlug;
+  } else {
+    saveQuizSlug(null, req, res);
+  }
+
   return {
     props: {
       user: session.user,
@@ -106,6 +117,7 @@ export async function getServerSideProps(context) {
       contentLists,
       codeChallengesByConcept,
       traceChallengesByConcept,
+      currentQuiz,
     },
   };
 }

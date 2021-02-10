@@ -5,7 +5,6 @@ import { Provider } from "next-auth/client";
 import { ThemeProvider } from "styled-components";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider } from "@material-ui/core/styles";
-import { Reset } from "styled-reset";
 import Box from "@material-ui/core/Box";
 import theme from "../src/theme";
 import AppBar from "../src/components/AppBar";
@@ -55,7 +54,10 @@ export default function MyApp({ Component, pageProps }) {
         <ThemeProvider theme={theme}>
           <Provider session={pageProps.session}>
             <Root>
-              <AppBar contentLists={pageProps.contentLists} />
+              <AppBar
+                contentLists={pageProps.contentLists}
+                currentQuiz={pageProps.currentQuiz}
+              />
               <MainBase>
                 {pageProps.contentLists && <ToolbarDiv />}
                 <FlexBox m={3}>
