@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { useRouter } from "next/router";
-import { csrfToken } from "next-auth/client";
+import { signIn } from "next-auth/client";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -36,8 +36,9 @@ const LoginBackBase = styled(Paper)`
 `;
 
 export default function Login({ csrfToken }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const usernameRef = useRef();
+  const passwordRef = useRef();
+  const [filled, setFilled] = useState(false);
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -45,20 +46,38 @@ export default function Login({ csrfToken }) {
   const hasError =
     router.query.error && router.query.error === "CredentialsSignin";
 
-  const setOrError = (setter, errorSetter) => {
+  const updateFilled = () => {
+    setFilled(
+      usernameRef.current &&
+        usernameRef.current.value &&
+        passwordRef.current &&
+        passwordRef.current.value
+    );
+  };
+
+  useEffect(updateFilled, [usernameRef.current, passwordRef.current]);
+
+  const setError = (errorSetter) => {
     return (event) => {
+      updateFilled();
       let value = event.target.value;
       let error = "";
       if (!value) error = "Não pode ser vazio";
-      setter(value);
       errorSetter(error);
     };
   };
 
-  const handleUsernameChanged = setOrError(setUsername, setUsernameError);
-  const handlePasswordChanged = setOrError(setPassword, setPasswordError);
+  const handleUsernameChanged = setError(setUsernameError);
+  const handlePasswordChanged = setError(setPasswordError);
 
-  const hasEmptyFields = !(username && password);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    signIn("credentials", {
+      username: usernameRef.current.value,
+      password: passwordRef.current.value,
+      callbackUrl: router.query.callbackUrl || "/",
+    });
+  };
 
   return (
     <CenteredContent height="100%">
@@ -74,12 +93,12 @@ export default function Login({ csrfToken }) {
             component="form"
             m={2}
             style={{ minWidth: "40vw" }}
-            method="post"
-            action="/api/auth/callback/credentials"
+            onSubmit={handleSubmit}
           >
             <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
             <TextField
               id="id-username"
+              inputRef={usernameRef}
               onChange={handleUsernameChanged}
               label="Usuário"
               variant="outlined"
@@ -96,6 +115,7 @@ export default function Login({ csrfToken }) {
 
             <TextField
               id="id-password"
+              inputRef={passwordRef}
               onChange={handlePasswordChanged}
               label="Senha"
               variant="outlined"
@@ -113,7 +133,7 @@ export default function Login({ csrfToken }) {
               color="secondary"
               type="submit"
               fullWidth
-              disabled={hasEmptyFields}
+              disabled={!filled}
             >
               Login
             </Button>
@@ -131,12 +151,4 @@ export default function Login({ csrfToken }) {
       </LoginBackBase>
     </CenteredContent>
   );
-}
-
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      csrfToken: await csrfToken(context),
-    },
-  };
 }
