@@ -72,8 +72,13 @@ export default function Login({ csrfToken }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    let username = usernameRef.current.value;
+    if (username.endsWith("insper.edu.br")) {
+      username = username.substring(0, username.indexOf("@"));
+    }
     signIn("credentials", {
-      username: usernameRef.current.value,
+      username: username,
       password: passwordRef.current.value,
       callbackUrl: router.query.callbackUrl || "/",
     });

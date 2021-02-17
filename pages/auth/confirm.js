@@ -75,7 +75,7 @@ export async function getServerSideProps(context) {
       token,
     })
     .then((res) => res.data)
-    .catch(() => ({ confirmed: false }));
+    .catch(() => ({ confirmed: false, msg: "server error" }));
 
   return {
     props: { confirmed: data.confirmed },
