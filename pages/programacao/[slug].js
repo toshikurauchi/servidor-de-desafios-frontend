@@ -3,7 +3,6 @@ import { getSession, useSession } from "next-auth/client";
 import styled from "styled-components";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { prism } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -24,9 +23,8 @@ import {
   postChallenge,
   getSubmissionList,
   getSubmissionCode,
-  loadQuiz,
 } from "../../src/client";
-import { saveQuizSlug, loadQuizSlug } from "../../src/cookies";
+import { useQuiz } from "../../src/context/quiz-state";
 
 function saveCode(challenge, code) {
   if (!challenge) return;
@@ -59,6 +57,8 @@ function CodeChallenge({ challenge, initialSubmissions, slug }) {
   const [passedTests, setPassedTests] = useState(false);
   const editorRef = useRef();
   const feedbackListRef = useRef();
+
+  const { quiz } = useQuiz();
 
   useEffect(() => {
     const savedCode = loadCode(challenge);
@@ -149,7 +149,7 @@ function CodeChallenge({ challenge, initialSubmissions, slug }) {
     ) : (
       ""
     );
-  if (!challenge)
+  if (!challenge || (challenge.in_quiz && !quiz))
     return (
       <Typography>
         Este exercício não existe ou você não tem acesso a ele.
@@ -296,22 +296,12 @@ export async function getServerSideProps({ req, res, query }) {
     getContentLists(session),
   ]);
 
-  let currentQuiz = null;
-  const quizSlug = loadQuizSlug(req, res);
-  if (quizSlug) {
-    currentQuiz = await loadQuiz(session, quizSlug);
-    if (currentQuiz) currentQuiz.slug = quizSlug;
-  } else {
-    saveQuizSlug(null, req, res);
-  }
-
   return {
     props: {
       slug,
       challenge,
       initialSubmissions,
       contentLists,
-      currentQuiz,
     },
   };
 }

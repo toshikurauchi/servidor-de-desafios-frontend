@@ -26,9 +26,7 @@ import {
   postTrace,
   getTraceStateList,
   getContentLists,
-  loadQuiz,
 } from "../../src/client";
-import { saveQuizSlug, loadQuizSlug } from "../../src/cookies";
 
 const LoadingContainer = styled.div`
   margin: 8em;
@@ -473,15 +471,6 @@ export async function getServerSideProps({ req, res, query }) {
 
   const linesWithCode = findLinesWithCode(trace.code);
 
-  let currentQuiz = null;
-  const quizSlug = loadQuizSlug(req, res);
-  if (quizSlug) {
-    currentQuiz = await loadQuiz(session, quizSlug);
-    if (currentQuiz) currentQuiz.slug = quizSlug;
-  } else {
-    saveQuizSlug(null, req, res);
-  }
-
   return {
     props: {
       slug,
@@ -489,7 +478,6 @@ export async function getServerSideProps({ req, res, query }) {
       stateList,
       linesWithCode,
       contentLists,
-      currentQuiz,
     },
   };
 }

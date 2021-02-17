@@ -38,7 +38,7 @@ const AppLogo = styled.img`
   margin: ${(props) => props.theme.spacing(1)};
 `;
 
-export default function PyGymAppBar({ contentLists, currentQuiz }) {
+export default function PyGymAppBar({ contentLists }) {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -76,7 +76,6 @@ export default function PyGymAppBar({ contentLists, currentQuiz }) {
         mobileOpen={mobileOpen}
         onClose={handleDrawerToggle}
         contentLists={contentLists}
-        currentQuiz={currentQuiz}
       />
     </>
   );

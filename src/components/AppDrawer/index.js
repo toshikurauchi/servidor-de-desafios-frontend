@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/client";
-import { useRouter } from "next/router";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Collapse from "@material-ui/core/Collapse";
@@ -15,6 +14,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import _ from "lodash";
 import Countdown from "react-countdown";
 import Link from "../Link";
+import { useQuiz } from "../../context/quiz-state";
 import { getRemainingQuizTime } from "../../client";
 
 const NestedListItem = styled(ListItem)`
@@ -136,29 +136,26 @@ function ContentList(props) {
   );
 }
 
-function AppDrawer({
-  ariaLabel,
-  mobileOpen,
-  onClose,
-  contentLists,
-  currentQuiz,
-}) {
-  const router = useRouter();
+function AppDrawer({ ariaLabel, mobileOpen, onClose, contentLists }) {
   const [session, loading] = useSession();
-  const remainingTestTime = currentQuiz ? currentQuiz.remaining_seconds : 0;
-  const [testTime, setTestTime] = useState(remainingTestTime);
+  const { quiz, setQuiz } = useQuiz();
+  const [testTime, setTestTime] = useState(0);
   const [count, setCount] = useState(1);
 
   useEffect(() => {
-    if (!currentQuiz || !session) return;
+    if (quiz) setTestTime(quiz.remaining_seconds);
+  }, [quiz && quiz.remaining_seconds]);
 
-    getRemainingQuizTime(session, currentQuiz.slug).then((t) => {
-      if (Math.abs(t - testTime) > 60) setTestTime(t);
+  useEffect(() => {
+    if (!quiz || !session) return;
+
+    getRemainingQuizTime(session, quiz.slug).then((t) => {
+      if (Math.abs(t - testTime) > 2 * 60) setTestTime(t);
       setTimeout(() => {
-        setCount(count + 1);
+        if (quiz) setCount(count + 1);
       }, 5 * 60 * 1000);
     });
-  }, [currentQuiz, session, count]);
+  }, [quiz, session, count]);
 
   if (!contentLists) return null;
 
@@ -183,7 +180,8 @@ function AppDrawer({
                 date={Date.now() + testTime * 1000}
                 daysInHours={true}
                 onComplete={() => {
-                  setTimeout(() => router.reload(), 60000);
+                  setTestTime(0);
+                  setQuiz(null);
                 }}
               />
             ) : (

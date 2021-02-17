@@ -19,8 +19,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Link from "../src/components/Link";
-import { getContentLists, loadQuiz } from "../src/client";
-import { saveQuizSlug, loadQuizSlug } from "../src/cookies";
+import { getContentLists } from "../src/client";
+import { useQuiz } from "../src/context/quiz-state";
 
 function round(n) {
   return Math.round(100 * n) / 100;
@@ -33,18 +33,13 @@ const InputSlugBase = styled(InputBase)`
   }
 `;
 
-const AvaliacaoPage = ({ currentQuiz }) => {
+const AvaliacaoPage = () => {
   const idRef = useRef(null);
   const router = useRouter();
 
-  const [quiz, setQuiz] = useState(currentQuiz);
+  const { quiz, setQuiz } = useQuiz();
   const [quizError, setQuizError] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  try {
-    const slug = loadQuizSlug();
-    if (!slug && quiz) setQuiz(null);
-  } catch (err) {}
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -58,11 +53,10 @@ const AvaliacaoPage = ({ currentQuiz }) => {
         const loadedQuiz = res.data;
         if (loadedQuiz.duration < 0 || loadedQuiz.submitted) {
           setQuizError("Esse quiz já foi finalizado");
+          setQuiz(null);
           return;
         }
-        saveQuizSlug(slug);
-        setQuiz(res.data);
-        router.replace(router.asPath);
+        setQuiz(loadedQuiz);
       })
       .catch((res) => {
         if (res.response.status === 404) setQuizError("Esse quiz não existe");
@@ -306,19 +300,9 @@ export async function getServerSideProps({ req, res }) {
 
   const contentLists = await getContentLists(session);
 
-  let currentQuiz = null;
-  const quizSlug = loadQuizSlug(req, res);
-  if (quizSlug) {
-    currentQuiz = await loadQuiz(session, quizSlug);
-    if (currentQuiz) currentQuiz.slug = quizSlug;
-  } else {
-    saveQuizSlug(null, req, res);
-  }
-
   return {
     props: {
       contentLists,
-      currentQuiz,
     },
   };
 }

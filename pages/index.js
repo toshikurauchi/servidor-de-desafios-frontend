@@ -9,9 +9,7 @@ import {
   listCodeChallenges,
   listTraceChallenges,
   listConcepts,
-  loadQuiz,
 } from "../src/client";
-import { saveQuizSlug, loadQuizSlug } from "../src/cookies";
 import { groupBySlug } from "../src/models/interaction";
 import ContentSummary from "../src/components/ContentSummary";
 
@@ -99,15 +97,6 @@ export async function getServerSideProps({ req, res }) {
   codeChallenges.forEach(addTo(codeChallengesByConcept));
   traceChallenges.forEach(addTo(traceChallengesByConcept));
 
-  let currentQuiz = null;
-  const quizSlug = loadQuizSlug(req, res);
-  if (quizSlug) {
-    currentQuiz = await loadQuiz(session, quizSlug);
-    if (currentQuiz) currentQuiz.slug = quizSlug;
-  } else {
-    saveQuizSlug(null, req, res);
-  }
-
   return {
     props: {
       user: session.user,
@@ -117,7 +106,6 @@ export async function getServerSideProps({ req, res }) {
       contentLists,
       codeChallengesByConcept,
       traceChallengesByConcept,
-      currentQuiz,
     },
   };
 }

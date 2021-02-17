@@ -8,6 +8,7 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import theme from "../src/theme";
 import AppBar from "../src/components/AppBar";
+import { QuizProvider } from "../src/context/quiz-state";
 
 const MainBase = styled.main`
   width: 500px;
@@ -53,18 +54,17 @@ export default function MyApp({ Component, pageProps }) {
       <MuiThemeProvider theme={theme}>
         <ThemeProvider theme={theme}>
           <Provider session={pageProps.session}>
-            <Root>
-              <AppBar
-                contentLists={pageProps.contentLists}
-                currentQuiz={pageProps.currentQuiz}
-              />
-              <MainBase>
-                {pageProps.contentLists && <ToolbarDiv />}
-                <FlexBox m={3}>
-                  <Component {...pageProps} />
-                </FlexBox>
-              </MainBase>
-            </Root>
+            <QuizProvider>
+              <Root>
+                <AppBar contentLists={pageProps.contentLists} />
+                <MainBase>
+                  {pageProps.contentLists && <ToolbarDiv />}
+                  <FlexBox m={3}>
+                    <Component {...pageProps} />
+                  </FlexBox>
+                </MainBase>
+              </Root>
+            </QuizProvider>
           </Provider>
         </ThemeProvider>
       </MuiThemeProvider>

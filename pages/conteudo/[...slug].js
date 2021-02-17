@@ -8,9 +8,7 @@ import {
   listCodeChallenges,
   listTraceChallenges,
   getInteractions,
-  loadQuiz,
 } from "../../src/client";
-import { saveQuizSlug, loadQuizSlug } from "../../src/cookies";
 import { groupBySlug } from "../../src/models/interaction";
 import ContentChallenges from "../../src/components/ContentChallenges";
 
@@ -77,16 +75,6 @@ export async function getServerSideProps({ req, res, query }) {
   } else {
     props["mdContent"] = await getPage(session, contentSlug, pageSlug);
   }
-
-  let currentQuiz = null;
-  const quizSlug = loadQuizSlug(req, res);
-  if (quizSlug) {
-    currentQuiz = await loadQuiz(session, quizSlug);
-    if (currentQuiz) currentQuiz.slug = quizSlug;
-  } else {
-    saveQuizSlug(null, req, res);
-  }
-  props["currentQuiz"] = currentQuiz;
 
   return {
     props,

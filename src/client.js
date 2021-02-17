@@ -190,12 +190,12 @@ export function getThanks() {
     .catch(() => []);
 }
 
-export function loadQuiz(session, slug) {
+export function loadQuiz(session) {
   if (!session || !session.token) {
-    return null;
+    return Promise.resolve(null);
   }
   return axios
-    .get(`${BACKEND_URL}/quiz/${slug}/`, {
+    .get(`${BACKEND_URL}/quiz/current`, {
       headers: {
         Authorization: `Token ${session.token}`,
       },
