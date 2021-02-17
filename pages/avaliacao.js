@@ -19,7 +19,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Link from "../src/components/Link";
-import { getContentLists } from "../src/client";
 import { useQuiz } from "../src/context/quiz-state";
 
 function round(n) {
@@ -295,14 +294,7 @@ export async function getServerSideProps({ req, res }) {
   if (!session) {
     res.writeHead(302, { Location: "/auth/login?callbackUrl=/" });
     res.end();
-    return { props: {} };
   }
 
-  const contentLists = await getContentLists(session);
-
-  return {
-    props: {
-      contentLists,
-    },
-  };
+  return { props: {} };
 }

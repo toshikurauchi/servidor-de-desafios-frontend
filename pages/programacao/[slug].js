@@ -19,7 +19,6 @@ import CodeChallengeFeedbackList from "../../src/components/CodeChallengeFeedbac
 import Alert from "../../src/components/Alert";
 import {
   getChallenge,
-  getContentLists,
   postChallenge,
   getSubmissionList,
   getSubmissionCode,
@@ -290,10 +289,9 @@ export async function getServerSideProps({ req, res, query }) {
     return { props: {} };
   }
 
-  const [challenge, initialSubmissions, contentLists] = await Promise.all([
+  const [challenge, initialSubmissions] = await Promise.all([
     getChallenge(session, "code", slug),
     getSubmissionList(session, slug),
-    getContentLists(session),
   ]);
 
   return {
@@ -301,7 +299,6 @@ export async function getServerSideProps({ req, res, query }) {
       slug,
       challenge,
       initialSubmissions,
-      contentLists,
     },
   };
 }

@@ -16,6 +16,7 @@ import Countdown from "react-countdown";
 import Link from "../Link";
 import { useQuiz } from "../../context/quiz-state";
 import { getRemainingQuizTime } from "../../client";
+import { useContentLists } from "../../context/content-lists-state";
 
 const NestedListItem = styled(ListItem)`
   && {
@@ -136,11 +137,12 @@ function ContentList(props) {
   );
 }
 
-function AppDrawer({ ariaLabel, mobileOpen, onClose, contentLists }) {
+function AppDrawer({ ariaLabel, mobileOpen, onClose }) {
   const [session, loading] = useSession();
   const { quiz, setQuiz } = useQuiz();
   const [testTime, setTestTime] = useState(0);
   const [count, setCount] = useState(1);
+  const contentLists = useContentLists();
 
   useEffect(() => {
     if (quiz) setTestTime(quiz.remaining_seconds);

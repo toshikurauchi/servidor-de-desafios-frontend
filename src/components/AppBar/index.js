@@ -38,7 +38,7 @@ const AppLogo = styled.img`
   margin: ${(props) => props.theme.spacing(1)};
 `;
 
-export default function PyGymAppBar({ contentLists }) {
+export default function PyGymAppBar() {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -75,7 +75,6 @@ export default function PyGymAppBar({ contentLists }) {
         ariaLabel="conteúdos do curso"
         mobileOpen={mobileOpen}
         onClose={handleDrawerToggle}
-        contentLists={contentLists}
       />
     </>
   );

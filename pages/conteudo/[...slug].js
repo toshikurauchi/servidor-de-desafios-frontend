@@ -2,21 +2,20 @@ import React from "react";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/client";
 import MaterialMarkdown from "../../src/components/MaterialMarkdown";
-import {
-  getContentLists,
-  getPage,
-  listCodeChallenges,
-  listTraceChallenges,
-  getInteractions,
-} from "../../src/client";
-import { groupBySlug } from "../../src/models/interaction";
+import { getPage } from "../../src/client";
 import ContentChallenges from "../../src/components/ContentChallenges";
+import { useContentLists } from "../../src/context/content-lists-state";
 
 function ContentPage(props) {
   const router = useRouter();
   const [contentSlug, pageSlug] = router.query.slug;
+  const contentLists = useContentLists();
 
-  if (pageSlug === "exercicios") return <ContentChallenges {...props} />;
+  if (pageSlug === "exercicios") {
+    if (!contentLists) return null;
+    const content = contentLists.topics.find((c) => c.slug === contentSlug);
+    return <ContentChallenges content={content} {...props} />;
+  }
   return <MaterialMarkdown>{props.mdContent}</MaterialMarkdown>;
 }
 
@@ -37,42 +36,7 @@ export async function getServerSideProps({ req, res, query }) {
     return { props: {} };
   }
 
-  const contentLists = await getContentLists(session);
-  props = { ...props, contentLists };
-
-  if (pageSlug === "exercicios") {
-    const content = contentLists.topics.find((c) => c.slug === contentSlug);
-    if (content) {
-      const concept = content.concept;
-      const [
-        challenges,
-        traces,
-        challengeInteractions,
-        traceInteractions,
-      ] = await Promise.all([
-        listCodeChallenges(session, concept),
-        listTraceChallenges(session, concept),
-        getInteractions(session, "code"),
-        getInteractions(session, "trace"),
-      ]);
-
-      const challengeInteractionsBySlug = groupBySlug(challengeInteractions);
-      const traceInteractionsBySlug = groupBySlug(traceInteractions);
-
-      props = {
-        ...props,
-        content,
-        challenges,
-        traces,
-        challengeInteractionsBySlug,
-        traceInteractionsBySlug,
-      };
-    } else {
-      res.writeHead(404);
-      res.end();
-      return { props };
-    }
-  } else {
+  if (pageSlug !== "exercicios") {
     props["mdContent"] = await getPage(session, contentSlug, pageSlug);
   }
 

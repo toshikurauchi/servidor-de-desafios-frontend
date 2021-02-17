@@ -12,16 +12,9 @@ export function postNewPassword(oldPassword, newPassword, repeatPassword) {
     .then((res) => res.data);
 }
 
-export async function getContentLists(session) {
-  if (!session || !session.token) {
-    return null;
-  }
+export async function getContentLists() {
   const serverRes = await axios
-    .get(BACKEND_URL + "/content/", {
-      headers: {
-        Authorization: `Token ${session.token}`,
-      },
-    })
+    .get(BACKEND_URL + "/content/")
     .catch(() => null);
   return serverRes.data;
 }
@@ -171,7 +164,7 @@ export function getTraceStateList(session, slug) {
 
 export function getInteractions(session, type) {
   if (!session || !session.token) {
-    return [];
+    return Promise.resolve([]);
   }
   return axios
     .get(`${BACKEND_URL}/${type}/interaction/`, {

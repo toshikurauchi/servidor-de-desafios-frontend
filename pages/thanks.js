@@ -5,7 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Grid from "@material-ui/core/Grid";
 import { Typography } from "@material-ui/core";
-import { getContentLists, getThanks } from "../src/client";
+import { getThanks } from "../src/client";
 
 const STATIC_URL = process.env.NEXT_PUBLIC_STATIC_URL;
 
@@ -68,14 +68,10 @@ export async function getServerSideProps(context) {
     return { props: {} };
   }
 
-  const [contentLists, authors] = await Promise.all([
-    getContentLists(session),
-    getThanks(),
-  ]);
+  const [authors] = await Promise.all([getThanks()]);
 
   return {
     props: {
-      contentLists,
       authors,
     },
   };

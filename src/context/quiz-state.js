@@ -4,7 +4,7 @@ import { loadQuiz } from "../client";
 
 const AppContext = createContext();
 
-export function QuizProvider({ children, state }) {
+export function QuizProvider({ children }) {
   const [session, loading] = useSession();
   const [quiz, setQuiz] = useState(null);
   const quizState = { quiz, setQuiz };

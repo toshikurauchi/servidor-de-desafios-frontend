@@ -21,12 +21,7 @@ import LoadingResultsProgress from "../../src/components/LoadingResultsProgress"
 import StaticCodeHighlight from "../../src/components/StaticCodeHighlight";
 import { findLinesWithCode } from "../../src/models/trace";
 import { traceMessages as m } from "../../src/messages";
-import {
-  getChallenge,
-  postTrace,
-  getTraceStateList,
-  getContentLists,
-} from "../../src/client";
+import { getChallenge, postTrace, getTraceStateList } from "../../src/client";
 
 const LoadingContainer = styled.div`
   margin: 8em;
@@ -463,10 +458,9 @@ export async function getServerSideProps({ req, res, query }) {
     return { props: {} };
   }
 
-  const [trace, stateList, contentLists] = await Promise.all([
+  const [trace, stateList] = await Promise.all([
     getChallenge(session, "trace", slug),
     getTraceStateList(session, slug),
-    getContentLists(session),
   ]);
 
   const linesWithCode = findLinesWithCode(trace.code);
@@ -477,7 +471,6 @@ export async function getServerSideProps({ req, res, query }) {
       trace,
       stateList,
       linesWithCode,
-      contentLists,
     },
   };
 }
