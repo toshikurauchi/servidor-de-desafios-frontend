@@ -227,7 +227,7 @@ export default function SignUp({ csrfToken }) {
                 fullWidth
                 disabled={!isValid}
               >
-                Login
+                Cadastrar
               </Button>
               {hasError && (
                 <FormHelperText error={true}>

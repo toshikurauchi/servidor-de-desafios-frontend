@@ -194,7 +194,7 @@ function CodeChallenge({ challenge, initialSubmissions, slug }) {
           >
             <Box style={{ flexGrow: 1, minHeight: "70vh" }} mt={2} mb={2}>
               <Editor
-                // height="80vh" // By default, it fully fits with its parent
+                height="100%" // By default, it fully fits with its parent
                 theme={"light"}
                 onChange={handleEditorChange}
                 editorDidMount={handleEditorDidMount}

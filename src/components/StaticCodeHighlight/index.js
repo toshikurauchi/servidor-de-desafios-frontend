@@ -1,6 +1,13 @@
 import React from "react";
+import styled from "styled-components";
 import PropTypes from "prop-types";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+
+const BaseSyntaxHighlighter = styled(SyntaxHighlighter)`
+  span {
+    white-space: initial;
+  }
+`;
 
 function StaticCodeHighlight(props) {
   const {
@@ -16,7 +23,7 @@ function StaticCodeHighlight(props) {
   } = props;
 
   return (
-    <SyntaxHighlighter
+    <BaseSyntaxHighlighter
       language={language}
       style={style}
       wrapLines={true}
@@ -69,7 +76,7 @@ function StaticCodeHighlight(props) {
       {...otherProps}
     >
       {children}
-    </SyntaxHighlighter>
+    </BaseSyntaxHighlighter>
   );
 }
 
