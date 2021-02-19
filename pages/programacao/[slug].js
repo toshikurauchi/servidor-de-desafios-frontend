@@ -25,6 +25,10 @@ import {
 } from "../../src/client";
 import { useQuiz } from "../../src/context/quiz-state";
 
+const BaseEditor = styled(Editor)`
+  min-height: 50vh;
+`;
+
 function saveCode(challenge, code) {
   if (!challenge) return;
   localStorage.setItem(`code.${challenge.slug}`, code);
@@ -193,8 +197,7 @@ function CodeChallenge({ challenge, initialSubmissions, slug }) {
             elevation={3}
           >
             <Box style={{ flexGrow: 1, minHeight: "70vh" }} mt={2} mb={2}>
-              <Editor
-                height="100%" // By default, it fully fits with its parent
+              <BaseEditor
                 theme={"light"}
                 onChange={handleEditorChange}
                 editorDidMount={handleEditorDidMount}
