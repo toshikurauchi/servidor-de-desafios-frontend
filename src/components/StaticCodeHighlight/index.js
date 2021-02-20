@@ -3,11 +3,7 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
-const BaseSyntaxHighlighter = styled(SyntaxHighlighter)`
-  span {
-    white-space: initial;
-  }
-`;
+const BaseSyntaxHighlighter = styled(SyntaxHighlighter)``;
 
 function StaticCodeHighlight(props) {
   const {
@@ -28,7 +24,7 @@ function StaticCodeHighlight(props) {
       style={style}
       wrapLines={true}
       showLineNumbers={true}
-      wrapLongLines={true}
+      wrapLongLines={false}
       lineNumberStyle={(lineNumber) => {
         let style = {
           "&::before": {
