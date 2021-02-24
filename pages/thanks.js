@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { getSession } from "next-auth/client";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";

@@ -35,14 +35,14 @@ export default function Home({
     const byConcept = {};
     codeChallenges.forEach(addTo(byConcept));
     setCodeChallengesByConcept(byConcept);
-  }, codeChallenges);
+  }, [codeChallenges]);
 
   useEffect(() => {
     if (!traceChallenges) return;
     const byConcept = {};
     traceChallenges.forEach(addTo(byConcept));
     setTraceChallengesByConcept(byConcept);
-  }, traceChallenges);
+  }, [traceChallenges]);
 
   if (!user || _.isEmpty(user)) return null;
   return (
