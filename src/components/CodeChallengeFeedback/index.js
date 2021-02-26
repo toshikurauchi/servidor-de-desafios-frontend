@@ -73,9 +73,11 @@ const BoxCenterContent = styled(Box)`
 `;
 
 const SourceCode = styled(Typography)`
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace !important;
-  letter-spacing: 0.01em;
+  && {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace !important;
+    letter-spacing: 0.01em;
+  }
 `;
 
 const AccordionSummaryBase = styled(AccordionSummary)`
@@ -132,7 +134,9 @@ function CodeChallengeFeedbackList(props) {
         />
       );
     } else {
-      resultText = "Erro";
+      if (props.submission.failures && props.submission.failures[0])
+        resultText = props.submission.failures[0];
+      else resultText = "Erro";
       result = (
         <LoadingResultsProgress
           size={rotateSpinnerSize}
@@ -216,7 +220,7 @@ function CodeChallengeFeedbackList(props) {
           {result}
         </BoxCenterContent>
         <Typography style={{ flexGrow: 1 }}>{resultText}</Typography>
-        <Typography color="textSecondary">
+        <Typography style={{ marginLeft: "5px" }} color="textSecondary">
           Submissão enviada{" "}
           <TimeAgo
             date={new Date(props.submission.creation_date)}

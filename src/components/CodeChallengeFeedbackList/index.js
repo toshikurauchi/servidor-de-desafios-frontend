@@ -15,7 +15,7 @@ const CodeChallengeFeedbackList = forwardRef((props, ref) => {
             key={`submission-${submission.id}`}
             submission={submission}
             onLoadButtonClick={props.onLoadButtonClick}
-            expanded={idx === 0}
+            expanded={idx === 0 && !submission.success}
           />
         ))
       ) : (
