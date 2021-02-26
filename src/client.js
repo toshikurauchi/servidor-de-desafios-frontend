@@ -4,7 +4,7 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export function postNewPassword(oldPassword, newPassword, repeatPassword) {
   return axios
-    .post("/api/change-password", {
+    .post("/api/change-password/", {
       oldPassword: oldPassword,
       newPassword: newPassword,
       repeatPassword: repeatPassword,
@@ -109,7 +109,7 @@ export function getSubmissionList(session, slug) {
     return null;
   }
   return axios
-    .get(`${BACKEND_URL}/code/${slug}/submission`, {
+    .get(`${BACKEND_URL}/code/${slug}/submission/`, {
       headers: { Authorization: `Token ${session.token}` },
     })
     .then((res) => res.data)
@@ -121,7 +121,7 @@ export function getSubmissionCode(session, slug, submissionId) {
     return null;
   }
   return axios
-    .get(`${BACKEND_URL}/code/${slug}/submission/${submissionId}/code`, {
+    .get(`${BACKEND_URL}/code/${slug}/submission/${submissionId}/code/`, {
       headers: { Authorization: `Token ${session.token}` },
     })
     .then((res) => res.data)
@@ -153,7 +153,7 @@ export function getTraceStateList(session, slug) {
     return null;
   }
   return axios
-    .get(`${BACKEND_URL}/trace/${slug}/state`, {
+    .get(`${BACKEND_URL}/trace/${slug}/state/`, {
       headers: {
         Authorization: `Token ${session.token}`,
       },
@@ -188,7 +188,7 @@ export function loadQuiz(session) {
     return Promise.resolve(null);
   }
   return axios
-    .get(`${BACKEND_URL}/quiz/current`, {
+    .get(`${BACKEND_URL}/quiz/current/`, {
       headers: {
         Authorization: `Token ${session.token}`,
       },
