@@ -15,7 +15,6 @@ import _ from "lodash";
 import Countdown from "react-countdown";
 import Link from "../Link";
 import { useQuiz } from "../../context/quiz-state";
-import { getRemainingQuizTime } from "../../client";
 import { useContentLists } from "../../context/content-lists-state";
 
 const NestedListItem = styled(ListItem)`
@@ -138,26 +137,8 @@ function ContentList(props) {
 }
 
 function AppDrawer({ ariaLabel, mobileOpen, onClose }) {
-  const [session, loading] = useSession();
-  const { quiz, setQuiz } = useQuiz();
-  const [testTime, setTestTime] = useState(0);
-  const [count, setCount] = useState(1);
+  const { quiz, reloadQuiz } = useQuiz();
   const contentLists = useContentLists();
-
-  useEffect(() => {
-    if (quiz) setTestTime(quiz.remaining_seconds);
-  }, [quiz && quiz.remaining_seconds]);
-
-  useEffect(() => {
-    if (!quiz || !session) return;
-
-    getRemainingQuizTime(session, quiz.slug).then((t) => {
-      if (Math.abs(t - testTime) > 2 * 60) setTestTime(t);
-      setTimeout(() => {
-        if (quiz) setCount(count + 1);
-      }, 5 * 60 * 1000);
-    });
-  }, [quiz, session, count]);
 
   if (!contentLists) return null;
 
@@ -175,15 +156,15 @@ function AppDrawer({ ariaLabel, mobileOpen, onClose }) {
             color="secondary"
             component={Link}
             href="/avaliacao"
+            onClick={() => reloadQuiz()}
             style={{ flexGrow: 1 }}
           >
-            {testTime > 0 ? (
+            {quiz ? (
               <Countdown
-                date={Date.now() + testTime * 1000}
+                date={quiz.endTime}
                 daysInHours={true}
                 onComplete={() => {
-                  setTestTime(0);
-                  setQuiz(null);
+                  reloadQuiz();
                 }}
               />
             ) : (

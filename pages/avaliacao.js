@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { useRouter } from "next/router";
@@ -36,9 +36,13 @@ const AvaliacaoPage = () => {
   const idRef = useRef(null);
   const router = useRouter();
 
-  const { quiz, setQuiz } = useQuiz();
+  const { quiz, setQuiz, reloadQuiz } = useQuiz();
   const [quizError, setQuizError] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  useEffect(() => {
+    if (quiz) reloadQuiz();
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -82,10 +86,9 @@ const AvaliacaoPage = () => {
         </Typography>
         <Typography paragraph={true}>Prezado(a) Aluno(a),</Typography>
         <Typography paragraph={true}>
-          Você terá {Math.round(quiz.remaining_seconds / 60)} minutos para
-          concluir esta avaliação, administre bem o seu tempo. Leia atentamente
-          as instruções a seguir e as questões da avaliação antes de começar a
-          resolvê-la.
+          Você terá {quiz.duration} minutos para concluir esta avaliação,
+          administre bem o seu tempo. Leia atentamente as instruções a seguir e
+          as questões da avaliação antes de começar a resolvê-la.
         </Typography>
         <ol>
           <li>
