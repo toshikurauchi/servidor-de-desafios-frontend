@@ -172,13 +172,7 @@ function AppDrawer({ ariaLabel, mobileOpen, onClose }) {
             )}
           </Button>
         </ListItem>
-        <ContentList
-          title="Aulas"
-          list={topics}
-          hasNumbers
-          nestedContent
-          startOpened
-        />
+        <ContentList title="Aulas" list={topics} hasNumbers nestedContent />
         <Divider />
         {_.entries(otherLists).map(([listName, list]) => (
           <React.Fragment key={listName}>
