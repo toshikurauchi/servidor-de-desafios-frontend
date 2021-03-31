@@ -34,20 +34,19 @@ export function getChallenge(session, type, slug, short) {
     .catch(() => null);
 }
 
-export function getPage(session, contentSlug, pageSlug) {
-  if (!session || !session.token) {
-    return null;
-  }
+export function listPages() {
+  return axios
+    .get(`${BACKEND_URL}/content/page/`)
+    .then((res) => res.data)
+    .catch(() => null);
+}
+
+export function getPage(contentSlug, pageSlug) {
   return axios
     .get(
-      `${BACKEND_URL}/content/page/${contentSlug}/${pageSlug}${
-        pageSlug ? "/" : ""
-      }`,
-      {
-        headers: {
-          Authorization: `Token ${session.token}`,
-        },
-      }
+      `${BACKEND_URL}/content/page/${contentSlug}/${
+        pageSlug ? `${pageSlug}/` : ""
+      }`
     )
     .then((res) => res.data)
     .catch(() => null);

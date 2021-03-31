@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { signIn, signOut, useSession } from "next-auth/client";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
@@ -16,6 +16,10 @@ const BaseLink = styled.a`
 function UserButton() {
   const [session, loading] = useSession();
   const user = session ? session.user : undefined;
+
+  useEffect(() => {
+    if (!loading && !user) signIn();
+  }, [user, loading]);
 
   const menuButton = useRef();
   const [changePasswordOpened, setChangePasswordOpened] = useState(false);
