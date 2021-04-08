@@ -44,6 +44,14 @@ function MarkdownLink({ href, ...props }) {
   return <Link href={safeHref} {...props} />;
 }
 
+const BaseTable = styled.table`
+  margin-bottom: 1rem;
+`;
+
+const BaseTd = styled.td`
+  padding: 5px 1rem;
+`;
+
 const CenteredImg = styled.img`
   display: block;
   margin-left: auto;
@@ -271,6 +279,8 @@ function MaterialMarkdown(props) {
     a: MarkdownLink,
     code: MarkdownCode,
     p: _.isNil(raw) ? MarkdownParagraph : "span",
+    table: BaseTable,
+    td: BaseTd,
   });
 }
 
