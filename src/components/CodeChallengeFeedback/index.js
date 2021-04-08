@@ -116,7 +116,7 @@ function CodeChallengeFeedbackList(props) {
       />
     );
     resultText = "Executando testes";
-  } else if (props.submission.id === "error") {
+  } else if (props.submission.id?.toString().startsWith("error")) {
     result = (
       <SvgIcon>
         <ErrorIcon />

@@ -103,7 +103,9 @@ function CodeChallenge({ challenge, initialSubmissions, slug }) {
       })
       .catch((data) => {
         setSubmissions(
-          [{ id: "error", creation_date: new Date() }].concat(submissions)
+          [
+            { id: `error-${submissions.length}`, creation_date: new Date() },
+          ].concat(submissions)
         );
       })
       .finally(() => {
