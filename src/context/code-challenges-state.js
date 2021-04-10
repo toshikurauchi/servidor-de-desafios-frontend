@@ -10,7 +10,14 @@ export function CodeChallengesProvider({ children }) {
   const state = { challenges };
 
   useEffect(() => {
-    if (session) listCodeChallenges(session).then(setChallenges);
+    if (session)
+      listCodeChallenges(session).then((challenges) => {
+        challenges.sort((a, b) => {
+          if (a.difficulty !== b.difficulty) return a.difficulty - b.difficulty;
+          return a.weight - b.weight;
+        });
+        setChallenges(challenges);
+      });
   }, [session]);
 
   return <AppContext.Provider value={state}>{children}</AppContext.Provider>;

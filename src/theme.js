@@ -13,6 +13,7 @@ const colors = {
   SUCCESS_BACKGROUND: "rgba(0,200,83,.1)",
   DANGER: "#ff1744",
   DANGER_BACKGROUND: "rgba(255,23,68,.1)",
+  WARNING: "#ffd43b",
   INFO: "#448aff",
   INFO_BACKGROUND: "rgba(68,138,255,.1)",
   EXERCISE: "#651fff",

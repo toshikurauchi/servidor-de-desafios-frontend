@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
+import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
 import _ from "lodash";
 import { groupBySlug } from "../../models/interaction";
 import { getInteractions } from "../../client";
@@ -22,12 +23,38 @@ const TableContainerBase = styled(TableContainer)`
   margin-bottom: ${(props) => props.theme.spacing(3)}px;
 `;
 
-const CorrectIcon = styled(CheckIcon)`
+const SuccessCell = styled(TableCell)`
+  && {
+    background-color: ${(props) => props.theme.colors.SUCCESS};
+    color: white;
+  }
+`;
+
+const ErrorCell = styled(TableCell)`
+  && {
+    background-color: ${(props) => props.theme.colors.DANGER};
+    color: white;
+  }
+`;
+
+const GreenDifficultyIcon = styled(FitnessCenterIcon)`
   color: ${(props) => props.theme.colors.SUCCESS};
 `;
 
-const WrongIcon = styled(CloseIcon)`
+const YellowDifficultyIcon = styled(FitnessCenterIcon)`
+  color: ${(props) => props.theme.colors.WARNING};
+`;
+
+const RedDifficultyIcon = styled(FitnessCenterIcon)`
   color: ${(props) => props.theme.colors.DANGER};
+`;
+
+const PurpleDifficultyIcon = styled(FitnessCenterIcon)`
+  color: #971df5;
+`;
+
+const BlackDifficultyIcon = styled(FitnessCenterIcon)`
+  color: black;
 `;
 
 function ContentChallenges({ content }) {
@@ -53,11 +80,53 @@ function ContentChallenges({ content }) {
   const getResult = (interactionsBySlug, challenge) => {
     const interaction = interactionsBySlug[challenge.slug];
     if (interaction && interaction.completed) {
-      return <CorrectIcon />;
+      return (
+        <SuccessCell align="center">
+          <CheckIcon />
+        </SuccessCell>
+      );
     } else if (interaction && !interaction.completed) {
-      return <WrongIcon />;
+      return (
+        <ErrorCell align="center">
+          <CloseIcon />
+        </ErrorCell>
+      );
     }
-    return null;
+    return <TableCell align="center" />;
+  };
+
+  const getDifficultyIcon = (difficulty) => {
+    if (difficulty <= 1) return <GreenDifficultyIcon />;
+    if (difficulty === 2)
+      return (
+        <>
+          <YellowDifficultyIcon />
+          <YellowDifficultyIcon />
+        </>
+      );
+    if (difficulty === 3)
+      return (
+        <>
+          <RedDifficultyIcon />
+          <RedDifficultyIcon />
+          <RedDifficultyIcon />
+        </>
+      );
+    if (difficulty === 4)
+      return (
+        <>
+          <PurpleDifficultyIcon />
+          <PurpleDifficultyIcon />
+          <PurpleDifficultyIcon />
+          <PurpleDifficultyIcon />
+        </>
+      );
+    else {
+      const icons = [];
+      for (let i = 0; i < difficulty; i++)
+        icons.push(<BlackDifficultyIcon key={`diff__icon__${i}`} />);
+      return <>{icons}</>;
+    }
   };
 
   return (
@@ -74,13 +143,15 @@ function ContentChallenges({ content }) {
           <TableContainerBase component={Paper}>
             <Table aria-label="exercícios de programação">
               <colgroup>
+                <col width="2rem" />
                 <col />
                 <col width="2rem" />
               </colgroup>
               <TableHead>
                 <TableRow>
-                  <TableCell>Título</TableCell>
                   <TableCell>Situação</TableCell>
+                  <TableCell>Título</TableCell>
+                  <TableCell>Dificuldade</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -92,11 +163,10 @@ function ContentChallenges({ content }) {
                       router.push(`/programacao/${challenge.slug}`)
                     }
                   >
-                    <TableCell component="th" scope="row">
-                      {challenge.title}
-                    </TableCell>
+                    {getResult(challengeInteractionsBySlug, challenge)}
+                    <TableCell>{challenge.title}</TableCell>
                     <TableCell align="center">
-                      {getResult(challengeInteractionsBySlug, challenge)}
+                      {getDifficultyIcon(challenge.difficulty)}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -114,13 +184,13 @@ function ContentChallenges({ content }) {
           <TableContainerBase component={Paper}>
             <Table aria-label="testes de mesa">
               <colgroup>
-                <col />
                 <col width="2rem" />
+                <col />
               </colgroup>
               <TableHead>
                 <TableRow>
-                  <TableCell>Título</TableCell>
                   <TableCell>Situação</TableCell>
+                  <TableCell>Título</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -132,11 +202,9 @@ function ContentChallenges({ content }) {
                       router.push(`/teste-de-mesa/${challenge.slug}`)
                     }
                   >
+                    {getResult(traceInteractionsBySlug, challenge)}
                     <TableCell component="th" scope="row">
                       {challenge.title}
-                    </TableCell>
-                    <TableCell align="center">
-                      {getResult(traceInteractionsBySlug, challenge)}
                     </TableCell>
                   </TableRow>
                 ))}
