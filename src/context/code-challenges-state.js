@@ -7,9 +7,8 @@ const AppContext = createContext();
 export function CodeChallengesProvider({ children }) {
   const [session, loading] = useSession();
   const [challenges, setChallenges] = useState(null);
-  const state = { challenges };
 
-  useEffect(() => {
+  const update = () => {
     if (session)
       listCodeChallenges(session).then((challenges) => {
         challenges.sort((a, b) => {
@@ -18,13 +17,17 @@ export function CodeChallengesProvider({ children }) {
         });
         setChallenges(challenges);
       });
-  }, [session]);
+  };
 
+  useEffect(update, [session]);
+
+  const state = { challenges, update };
   return <AppContext.Provider value={state}>{children}</AppContext.Provider>;
 }
 
 export function useCodeChallenges(concept) {
-  const { challenges } = useContext(AppContext);
+  const { challenges, update } = useContext(AppContext);
+  if (challenges?.length && !challenges[0].difficulty) update();
   if (challenges && concept) {
     return challenges.filter((challenge) => challenge.concept.slug == concept);
   }
