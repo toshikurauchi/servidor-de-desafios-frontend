@@ -39,18 +39,21 @@ export default async (req, res) => {
     const result = await axios
       .post(`${lambda_url}/code`, { code, test_code, function_name, app_token })
       .then((res) => res.data)
-      .catch((error) =>
-        error.response.status === 502
-          ? {
-              failure_msgs: [
-                "O código demorou demais para terminar. Será que existe algum loop infinito no seu código?",
-              ],
-              stack_traces: ["Timeout."],
-              stdouts: [],
-              success: false,
-            }
-          : null
-      );
+      .catch((error) => {
+        let msg = "Ocorreu um erro no servidor.";
+        let st = "Erro no servidor.";
+        if (error.response?.status === 502) {
+          msg =
+            "O código demorou demais para terminar. Será que existe algum loop infinito no seu código?";
+          st = "Timeout.";
+        }
+        return {
+          failure_msgs: [msg],
+          stack_traces: [st],
+          stdouts: [],
+          success: false,
+        };
+      });
 
     const serverRes = await axios
       .post(
