@@ -115,6 +115,18 @@ export function getSubmissionList(session, slug) {
     .catch(() => null);
 }
 
+export function getSubmission(session, slug, submissionId) {
+  if (!session || !session.token) {
+    return null;
+  }
+  return axios
+    .get(`${BACKEND_URL}/code/${slug}/submission/${submissionId}/`, {
+      headers: { Authorization: `Token ${session.token}` },
+    })
+    .then((res) => res.data)
+    .catch(() => null);
+}
+
 export function getSubmissionCode(session, slug, submissionId) {
   if (!session || !session.token) {
     return null;
@@ -212,4 +224,19 @@ export function getRemainingQuizTime(session, slug) {
     })
     .then((res) => res.data)
     .catch(() => 0);
+}
+
+export function getGrades(session) {
+  if (!session || !session.token) {
+    return null;
+  }
+
+  return axios
+    .get(`${BACKEND_URL}/grade/`, {
+      headers: {
+        Authorization: `Token ${session.token}`,
+      },
+    })
+    .then((res) => res.data)
+    .catch(() => null);
 }

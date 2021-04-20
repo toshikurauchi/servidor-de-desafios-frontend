@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getSession, useSession } from "next-auth/client";
 import styled from "styled-components";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { prism } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -13,7 +11,6 @@ import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import SendIcon from "@material-ui/icons/Send";
 import { DropzoneDialog } from "material-ui-dropzone";
 import { ControlledEditor as Editor } from "@monaco-editor/react";
-import MaterialMarkdown from "../../src/components/MaterialMarkdown";
 import LoadingResultsProgress from "../../src/components/LoadingResultsProgress";
 import CodeChallengeFeedbackList from "../../src/components/CodeChallengeFeedbackList";
 import Alert from "../../src/components/Alert";
@@ -24,6 +21,7 @@ import {
   getSubmissionCode,
 } from "../../src/client";
 import { useQuiz } from "../../src/context/quiz-state";
+import CodeChallengeDetails from "../../src/components/CodeChallengeDetails";
 
 const BaseEditor = styled(Editor)`
   min-height: 50vh;
@@ -138,22 +136,6 @@ function CodeChallenge({ challenge, initialSubmissions, slug }) {
     saveCode(challenge, value);
   };
 
-  const functionName =
-    challenge && challenge.function_name ? (
-      <Typography paragraph={true}>
-        O nome da sua função deve ser{" "}
-        <SyntaxHighlighter
-          language="python"
-          customStyle={{ padding: "0.1em" }}
-          PreTag={"span"}
-          style={prism}
-        >
-          {challenge.function_name}
-        </SyntaxHighlighter>
-      </Typography>
-    ) : (
-      ""
-    );
   if (!challenge || (challenge.in_quiz && !quiz))
     return (
       <Typography>
@@ -181,11 +163,7 @@ function CodeChallenge({ challenge, initialSubmissions, slug }) {
         </Snackbar>
 
         <GridItem item md={6}>
-          <Typography variant="h2" component="h1" gutterBottom={true}>
-            {challenge.title}
-          </Typography>
-          <MaterialMarkdown>{challenge.question}</MaterialMarkdown>
-          {functionName}
+          <CodeChallengeDetails challenge={challenge} />
         </GridItem>
 
         <GridItem

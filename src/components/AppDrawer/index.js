@@ -172,6 +172,9 @@ function AppDrawer({ ariaLabel, mobileOpen, onClose }) {
             )}
           </Button>
         </ListItem>
+        <ListItem button component="a" href="/notas">
+          <ListItemText primary="Minhas notas" />
+        </ListItem>
         <ContentList title="Aulas" list={topics} hasNumbers nestedContent />
         <Divider />
         {_.entries(otherLists).map(([listName, list]) => (
