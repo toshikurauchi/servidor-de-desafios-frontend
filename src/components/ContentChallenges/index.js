@@ -12,8 +12,8 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
-import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
 import _ from "lodash";
+import DifficultyBar from "../DifficultyBar";
 import { groupBySlug } from "../../models/interaction";
 import { getInteractions } from "../../client";
 import { useCodeChallenges } from "../../context/code-challenges-state";
@@ -35,26 +35,6 @@ const ErrorCell = styled(TableCell)`
     background-color: ${(props) => props.theme.colors.DANGER};
     color: white;
   }
-`;
-
-const GreenDifficultyIcon = styled(FitnessCenterIcon)`
-  color: ${(props) => props.theme.colors.SUCCESS};
-`;
-
-const YellowDifficultyIcon = styled(FitnessCenterIcon)`
-  color: ${(props) => props.theme.colors.WARNING};
-`;
-
-const RedDifficultyIcon = styled(FitnessCenterIcon)`
-  color: ${(props) => props.theme.colors.DANGER};
-`;
-
-const PurpleDifficultyIcon = styled(FitnessCenterIcon)`
-  color: #971df5;
-`;
-
-const BlackDifficultyIcon = styled(FitnessCenterIcon)`
-  color: black;
 `;
 
 function ContentChallenges({ content }) {
@@ -95,40 +75,6 @@ function ContentChallenges({ content }) {
     return <TableCell align="center" />;
   };
 
-  const getDifficultyIcon = (difficulty) => {
-    if (difficulty <= 1) return <GreenDifficultyIcon />;
-    if (difficulty === 2)
-      return (
-        <>
-          <YellowDifficultyIcon />
-          <YellowDifficultyIcon />
-        </>
-      );
-    if (difficulty === 3)
-      return (
-        <>
-          <RedDifficultyIcon />
-          <RedDifficultyIcon />
-          <RedDifficultyIcon />
-        </>
-      );
-    if (difficulty === 4)
-      return (
-        <>
-          <PurpleDifficultyIcon />
-          <PurpleDifficultyIcon />
-          <PurpleDifficultyIcon />
-          <PurpleDifficultyIcon />
-        </>
-      );
-    else {
-      const icons = [];
-      for (let i = 0; i < difficulty; i++)
-        icons.push(<BlackDifficultyIcon key={`diff__icon__${i}`} />);
-      return <>{icons}</>;
-    }
-  };
-
   return (
     <>
       <Typography variant="h2" component="h1" gutterBottom={true}>
@@ -166,7 +112,7 @@ function ContentChallenges({ content }) {
                     {getResult(challengeInteractionsBySlug, challenge)}
                     <TableCell>{challenge.title}</TableCell>
                     <TableCell align="center">
-                      {getDifficultyIcon(challenge.difficulty)}
+                      <DifficultyBar difficulty={challenge.difficulty} />
                     </TableCell>
                   </TableRow>
                 ))}

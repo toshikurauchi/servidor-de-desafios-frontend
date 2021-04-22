@@ -57,7 +57,9 @@ export default function Home({
             <Grid
               item
               key={content.slug}
-              xs={3}
+              xs={12}
+              md={6}
+              lg={3}
               style={{ display: "flex", flexDirection: "column" }}
             >
               <ContentSummary
