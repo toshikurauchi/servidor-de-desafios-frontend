@@ -13,6 +13,7 @@ export function computeProjectGrade(projectData, projectSchema) {
 }
 
 export function computeProjectAvg(codeChallenges, schema) {
+  if (!codeChallenges || !schema) return 0;
   return (
     Math.round(
       schema
