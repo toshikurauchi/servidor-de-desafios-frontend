@@ -50,7 +50,7 @@ export default function PaginaNotas({ user, grades }) {
           </span>
         </Typography>
         <Typography variant="h4" component="p" gutterBottom>
-          Nota de Projetos:{" "}
+          Nota de Design de Software:{" "}
           <span style={{ color: finalGrade < 5 ? "red" : "green" }}>
             {finalGrade}
           </span>
