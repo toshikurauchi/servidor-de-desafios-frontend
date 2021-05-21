@@ -5,9 +5,13 @@ export function computeQuestionGrade(questionData) {
 }
 
 export function computeQuizGrade(quizData) {
-  return _.values(quizData)
-    .map(computeQuestionGrade)
-    .reduce((a, b) => a + b, 0);
+  return (
+    Math.round(
+      _.values(quizData)
+        .map(computeQuestionGrade)
+        .reduce((a, b) => a + b, 0) * 100
+    ) / 100
+  );
 }
 
 export function computeQuizAvg(quizzes, schema, discardOne = true) {
@@ -23,5 +27,5 @@ export function computeQuizAvg(quizzes, schema, discardOne = true) {
     if (quizTotalWeight < 100) quizGrades.push(0);
     minQuizGrade = Math.min(...quizGrades);
   } else minQuizGrade = 0;
-  return (quizGrades.reduce((a, b) => a + b, 0) - minQuizGrade) / 100;
+  return Math.round(quizGrades.reduce((a, b) => a + b, 0) - minQuizGrade) / 100;
 }
