@@ -95,32 +95,33 @@ export default function PaginaNotas({ user, grades }) {
         <Typography variant="h4" component="h4" gutterBottom>
           Projetos (média atual: {projectAvg}/10)
         </Typography>
-        {schema.code_exercises.map((projectSchema) => {
-          const projectData = codeChallenges[projectSchema.slug];
-          return (
-            <Box mb={1} mt={1} key={`project__${projectSchema.slug}`}>
-              <Typography variant="h5">
-                {projectSchema.name} (Peso: {projectSchema.weight}%)
-              </Typography>
-              {projectSchema.manual_grade_weight < 100 && (
-                <div>
-                  Nota Automática (peso{" "}
-                  {100 - projectSchema.manual_grade_weight}%):{" "}
-                  {projectData.auto_grade || 0}
-                </div>
-              )}
-              {projectSchema.manual_grade_weight > 0 && (
-                <div>
-                  Nota Manual (peso {projectSchema.manual_grade_weight}%):{" "}
-                  {projectData.manual_grade || 0}
-                </div>
-              )}
-              {projectData.feedback && (
-                <div>Feedback: {projectData.feedback}</div>
-              )}
-            </Box>
-          );
-        })}
+        {codeChallenges &&
+          schema.code_exercises.map((projectSchema) => {
+            const projectData = codeChallenges[projectSchema.slug];
+            return (
+              <Box mb={1} mt={1} key={`project__${projectSchema.slug}`}>
+                <Typography variant="h5">
+                  {projectSchema.name} (Peso: {projectSchema.weight}%)
+                </Typography>
+                {projectSchema.manual_grade_weight < 100 && (
+                  <div>
+                    Nota Automática (peso{" "}
+                    {100 - projectSchema.manual_grade_weight}%):{" "}
+                    {projectData.auto_grade || 0}
+                  </div>
+                )}
+                {projectSchema.manual_grade_weight > 0 && (
+                  <div>
+                    Nota Manual (peso {projectSchema.manual_grade_weight}%):{" "}
+                    {projectData.manual_grade || 0}
+                  </div>
+                )}
+                {projectData.feedback && (
+                  <div>Feedback: {projectData.feedback}</div>
+                )}
+              </Box>
+            );
+          })}
       </Box>
     </div>
   );
