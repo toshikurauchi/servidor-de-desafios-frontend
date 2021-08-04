@@ -172,18 +172,24 @@ const AvaliacaoPage = () => {
         <TableContainer component={Paper}>
           <Table aria-label="questões">
             <TableBody>
-              {quiz.challenges.map((challenge) => (
-                <TableRow key={`challenge__${challenge.slug}`}>
-                  <TableCell style={{ padding: 0, display: "flex" }}>
-                    <Link
-                      href={`/programacao/${challenge.slug}`}
-                      style={{ flexGrow: 1, padding: "1rem", fontSize: "1rem" }}
-                    >
-                      {challenge.title}
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {quiz.challenges
+                .sort((c1, c2) => c1.title.localeCompare(c2.title))
+                .map((challenge) => (
+                  <TableRow key={`challenge__${challenge.slug}`}>
+                    <TableCell style={{ padding: 0, display: "flex" }}>
+                      <Link
+                        href={`/programacao/${challenge.slug}`}
+                        style={{
+                          flexGrow: 1,
+                          padding: "1rem",
+                          fontSize: "1rem",
+                        }}
+                      >
+                        {challenge.title}
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
