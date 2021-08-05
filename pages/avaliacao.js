@@ -20,6 +20,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Link from "../src/components/Link";
 import { useQuiz } from "../src/context/quiz-state";
+import MaterialMarkdown from "../src/components/MaterialMarkdown";
 
 function round(n) {
   return Math.round(100 * n) / 100;
@@ -84,87 +85,96 @@ const AvaliacaoPage = () => {
         <Typography variant="h1" style={{ marginBottom: "2rem" }}>
           {quiz.title}
         </Typography>
-        <Typography paragraph={true}>Prezado(a) Aluno(a),</Typography>
-        <Typography paragraph={true}>
-          Você terá {quiz.duration} minutos para concluir esta avaliação,
-          administre bem o seu tempo. Leia atentamente as instruções a seguir e
-          as questões da avaliação antes de começar a resolvê-la.
-        </Typography>
-        <ol>
-          <li>
-            Esta avaliação é composta de {nQuestoes}{" "}
-            {nQuestoes === 1 ? "questão" : "questões"}
-          </li>
-          <li>
-            Consulta a colegas ou quaisquer outras pessoas além dos aplicadores
-            constituirá violação ao Código de Ética e de Conduta e acarretará
-            sanções nele previstas. Faça o seu trabalho de maneira ética!
-          </li>
-          {quiz.has_manual_assessment ? (
-            <li>
-              Cada questão vale {pontosTotais} pontos divididos da seguinte
-              maneira:
-              <ul>
-                <li>
-                  A correção do servidor vale {pontosAuto} pontos se a solução
-                  for considerada correta ou zero, caso contrário;
-                </li>
-                <li>
-                  A avaliação do código pelos professores vale até{" "}
-                  {pontosManual} pontos. O código será avaliado de acordo com a
-                  seguinte rubrica:
-                </li>
-              </ul>
-            </li>
-          ) : (
-            <li>
-              Será considerada a correção automática do servidor. Assim, não
-              existe acerto parcial.
-            </li>
-          )}
-        </ol>
-        {quiz.has_manual_assessment && (
-          <TableContainer component={Paper}>
-            <Table aria-label="rubrica">
-              <TableHead>
-                <TableRow>
-                  <TableCell>0 pontos</TableCell>
-                  <TableCell>{round(pontosManual * 0.2)} pontos</TableCell>
-                  <TableCell>{round(pontosManual * 0.4)} pontos</TableCell>
-                  <TableCell>{round(pontosManual * 0.6)} pontos</TableCell>
-                  <TableCell>{round(pontosManual * 0.8)} pontos</TableCell>
-                  <TableCell>{pontosManual} pontos</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell component="th" scope="row">
-                    Código em branco, ou não é possível compreender a lógica, ou
-                    não faz o que foi pedido
-                  </TableCell>
-                  <TableCell>
-                    Lógica incorreta, mas dentro do que foi pedido
-                  </TableCell>
-                  <TableCell>
-                    Lógica coerente com o que foi pedido, mas com erros de
-                    sintaxe ou erros graves de execução
-                  </TableCell>
-                  <TableCell>
-                    Lógica quase correta, mas com erros de execução
-                  </TableCell>
-                  <TableCell>
-                    Lógica correta, mas com código desnecessariamente complexo
-                  </TableCell>
-                  <TableCell>Lógica correta e código legível</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+        {quiz.description && (
+          <MaterialMarkdown>{quiz.description}</MaterialMarkdown>
         )}
+        {!quiz.description && (
+          <>
+            <Typography paragraph={true}>Prezado(a) Aluno(a),</Typography>
+            <Typography paragraph={true}>
+              Você terá {quiz.duration} minutos para concluir esta avaliação,
+              administre bem o seu tempo. Leia atentamente as instruções a
+              seguir e as questões da avaliação antes de começar a resolvê-la.
+            </Typography>
+            <ol>
+              <li>
+                Esta avaliação é composta de {nQuestoes}{" "}
+                {nQuestoes === 1 ? "questão" : "questões"}
+              </li>
+              <li>
+                Consulta a colegas ou quaisquer outras pessoas além dos
+                aplicadores constituirá violação ao Código de Ética e de Conduta
+                e acarretará sanções nele previstas. Faça o seu trabalho de
+                maneira ética!
+              </li>
+              {quiz.has_manual_assessment ? (
+                <li>
+                  Cada questão vale {pontosTotais} pontos divididos da seguinte
+                  maneira:
+                  <ul>
+                    <li>
+                      A correção do servidor vale {pontosAuto} pontos se a
+                      solução for considerada correta ou zero, caso contrário;
+                    </li>
+                    <li>
+                      A avaliação do código pelos professores vale até{" "}
+                      {pontosManual} pontos. O código será avaliado de acordo
+                      com a seguinte rubrica:
+                    </li>
+                  </ul>
+                </li>
+              ) : (
+                <li>
+                  Será considerada a correção automática do servidor. Assim, não
+                  existe acerto parcial.
+                </li>
+              )}
+            </ol>
+            {quiz.has_manual_assessment && (
+              <TableContainer component={Paper}>
+                <Table aria-label="rubrica">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>0 pontos</TableCell>
+                      <TableCell>{round(pontosManual * 0.2)} pontos</TableCell>
+                      <TableCell>{round(pontosManual * 0.4)} pontos</TableCell>
+                      <TableCell>{round(pontosManual * 0.6)} pontos</TableCell>
+                      <TableCell>{round(pontosManual * 0.8)} pontos</TableCell>
+                      <TableCell>{pontosManual} pontos</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        Código em branco, ou não é possível compreender a
+                        lógica, ou não faz o que foi pedido
+                      </TableCell>
+                      <TableCell>
+                        Lógica incorreta, mas dentro do que foi pedido
+                      </TableCell>
+                      <TableCell>
+                        Lógica coerente com o que foi pedido, mas com erros de
+                        sintaxe ou erros graves de execução
+                      </TableCell>
+                      <TableCell>
+                        Lógica quase correta, mas com erros de execução
+                      </TableCell>
+                      <TableCell>
+                        Lógica correta, mas com código desnecessariamente
+                        complexo
+                      </TableCell>
+                      <TableCell>Lógica correta e código legível</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
 
-        <Typography paragraph={true} style={{ marginTop: "2em" }}>
-          Boa Prova!
-        </Typography>
+            <Typography paragraph={true} style={{ marginTop: "2em" }}>
+              Boa Prova!
+            </Typography>
+          </>
+        )}
 
         <Typography variant="h2" paragraph={true}>
           Questões
