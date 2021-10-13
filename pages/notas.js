@@ -107,17 +107,17 @@ export default function PaginaNotas({ user, grades }) {
                   <div>
                     Nota Automática (peso{" "}
                     {100 - projectSchema.manual_grade_weight}%):{" "}
-                    {projectData.auto_grade || 0}
+                    {projectData?.auto_grade || 0}
                   </div>
                 )}
                 {projectSchema.manual_grade_weight > 0 && (
                   <div>
                     Nota Manual (peso {projectSchema.manual_grade_weight}%):{" "}
-                    {projectData.manual_grade || 0}
+                    {projectData?.manual_grade || 0}
                   </div>
                 )}
-                {projectData.feedback && (
-                  <div>Feedback: {projectData.feedback}</div>
+                {projectData?.feedback && (
+                  <div>Feedback: {projectData?.feedback}</div>
                 )}
               </Box>
             );
