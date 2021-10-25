@@ -114,7 +114,14 @@ const AvaliacaoPage = () => {
                   <ul>
                     <li>
                       A correção do servidor vale {pontosAuto} pontos se a
-                      solução for considerada correta ou zero, caso contrário;
+                      solução for considerada correta ou zero, caso contrário.
+                      <b>Importante:</b> soluções consideradas inválidas poderão
+                      ter a nota automática reduzida ou até mesmo zerada após a
+                      correção manual. Uma solução será considerada inválida se
+                      ao invés de apresentar um algoritmo que resolva o
+                      problema, o código seja desenvolvido especificamente para
+                      os casos de teste (por exemplo: um <code>if</code> para
+                      cada entrada);
                     </li>
                     <li>
                       A avaliação do código pelos professores vale até{" "}
