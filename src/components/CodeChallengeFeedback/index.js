@@ -219,7 +219,11 @@ function CodeChallengeFeedbackList(props) {
         <BoxCenterContent width={resultIconSize} height={resultIconSize}>
           {result}
         </BoxCenterContent>
-        <Typography style={{ flexGrow: 1 }}>{resultText}</Typography>
+        <div style={{ flexGrow: 1 }}>
+          {resultText.split("\n").map((t, idx) => (
+            <Typography key={`result--text--${idx}`}>{t}</Typography>
+          ))}
+        </div>
         <Typography style={{ marginLeft: "5px" }} color="textSecondary">
           Submissão enviada{" "}
           <TimeAgo
